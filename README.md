@@ -1,4 +1,4 @@
-#  <img src="https://github.com/ssss228/MySoft/blob/main/icon.png" alt="LBSG logo" title="Aimeos" align="center" />
+#  <img src="https://github.com/MultiMCPE/MySoft/blob/main/icon.png" alt="LBSG logo" title="Aimeos" align="center" />
 # MySoft Minecraft PE/BE Server Software
 
 ## Introduction
