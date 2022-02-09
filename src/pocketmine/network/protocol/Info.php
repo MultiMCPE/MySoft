@@ -1,0 +1,237 @@
+<?php
+
+/*
+ _      _          _____    _____    ___  _____
+| \    / |  \  /  |        |     |  |       |
+|  \  /  |   \/   |_____   |     | _|__     |
+|   \/   |   /          |  |     |  |       |
+|        |  /     ______|  |_____|  |       |
+*/
+
+/**
+ * Minecraft: PE multiplayer protocol implementation
+ */
+namespace pocketmine\network\protocol;
+
+
+interface Info{
+
+	/**
+	 * Minecraft: PE protocol versions
+	 */
+	const CURRENT_PROTOCOL = 110;
+	const ACCEPTED_PROTOCOLS = [110, 111, 112, 113, 120, 121, 130, 131, 132, 133, 134, 135, 136, 137, 140, 141, 150, 160, 200, 201, 220, 221, 222, 224, 223, 240, 250, 260, 261, 270, 271, 273, 274, 280, 281, 282, 290, 291, 310, 311, 312, 313, 330, 331, 332, 342, 340, 350, 351, 352, 353, 354, 360, 361, 370, 371, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 427, 428, 429, 430, 431, 433, 434, 435, 437, 440, 441, 448, 453, 455, 456, 459, 462, 464, 465, 471, 474, 475, 476, 477, 479, 485];
+	
+	/** 1.1.0.0 - 1.1.7 OLD */
+	const PROTOCOL_110 = 110; // 1.1.0.0, 1.1.0.1, 1.1.0.2, 1.1.0.3, 1.1.0.4, 1.1.0.5
+	const PROTOCOL_111 = 111; // 1.1.0.8
+	const PROTOCOL_112 = 112; // 1.1.0.9
+	const PROTOCOL_113 = 113; // 1.1.0, 1.1.1.0, 1.1.1.1, 1.1.1, 1.1.2, 1.1.3.0, 1.1.3.1, 1.1.3, 1.1.4, 1.1.5, 1.1.7
+	/** 1.2 BETAS */
+	const PROTOCOL_134 = 134; // 1.2.0.20, 1.2.0.22
+	const PROTOCOL_135 = 135; // 1.2.0.24, 1.2.0.25
+	const PROTOCOL_136 = 136; // 1.2.0.31
+	const PROTOCOL_137 = 137; // 1.2.0, 1.2.1, 1.2.2, 1.2.3.3, 1.2.3, 1.2.5.0
+	const PROTOCOL_140 = 140; // 1.2.5.11
+	const PROTOCOL_141 = 141; // 1.2.5, 1.2.5.15
+	const PROTOCOL_150 = 150; // 1.2.6, 1.2.6.1
+	const PROTOCOL_160 = 160; // 1.2.7, 1.2.8, 1.2.9
+	const PROTOCOL_200 = 200; // 1.2.10.1
+	const PROTOCOL_201 = 201; // 1.2.10, 1.2.11
+	const PROTOCOL_220 = 220; // 1.2.13.5, 1.2.13.6
+	const PROTOCOL_221 = 221; // 1.2.13.8
+	const PROTOCOL_222 = 222; // 1.2.13.10
+	const PROTOCOL_223 = 223; // 1.2.3, 1.2.4, 1.2.5, 1.2.13.60
+	const PROTOCOL_224 = 224; // 1.2.13.11
+	const PROTOCOL_240 = 240; // 1.2.14.2, 1.2.14.3
+	const PROTOCOL_250 = 250; // 1.2.15.1
+	const PROTOCOL_260 = 260; // 1.2.20.1, 1.2.20.2
+	const PROTOCOL_261 = 261; // 1.4.0, 1.4.1, 1.4.2, 1.4.3, 1.4.4
+	const PROTOCOL_270 = 270; // 1.5.0.0
+	const PROTOCOL_271 = 271; // 1.5.0.1, 1.5.0.4
+	const PROTOCOL_273 = 273; // 1.5.0.7
+	const PROTOCOL_274 = 274; // 1.5.0.10, 1.5.0, 1.5.1, 1.5.2, 1.5.3
+	const PROTOCOL_280 = 280; // 1.6.0.1
+	const PROTOCOL_281 = 281; // 1.6.0.5, 1.6.0.6
+	const PROTOCOL_282 = 282; // 1.6.0.8, 1.6.0.30, 1.6.0, 1.6.1, 1.6.2
+	const PROTOCOL_290 = 290; // 1.7.0.2, 1.7.0.3
+	const PROTOCOL_291 = 291; // 1.7.0.5, 1.7.0.7, 1.7.0.9, 1.7.0, 1.7.1
+	const PROTOCOL_310 = 310; // 1.8.0.4, 1.8.0.8
+	const PROTOCOL_311 = 311; // 1.8.0.9, 1.8.0.10
+	const PROTOCOL_312 = 312; // 1.8.0.11, 1.8.0.13, 1.8.0.14
+	const PROTOCOL_313 = 313; // 1.8.0, 1.8.1
+	const PROTOCOL_330 = 330; // 1.9.0.0
+	const PROTOCOL_331 = 331; // 1.9.0.2
+	const PROTOCOL_332 = 332; // 1.9.0.3, 1.9.0.5, 1.9.0
+	const PROTOCOL_340 = 340; // 1.10.0.3, 1.10.0.4, 1.10.0, 1.10.1
+	const PROTOCOL_342 = 342; // 1.10.0
+	const PROTOCOL_350 = 350; // 1.11.0.1
+	const PROTOCOL_351 = 351; // 1.11.0.3
+	const PROTOCOL_352 = 352; // 1.11.0.4
+	const PROTOCOL_353 = 353; // 1.11.0.5
+	const PROTOCOL_354 = 354; // 1.11.0.7, 1.11.0.8, 1.11.0.9, 1.11.0.10, 1.11.0, 1.11.1, 1.11.2, 1.11.3, 1.11.4
+	const PROTOCOL_360 = 360; // 1.12.0.2
+	const PROTOCOL_361 = 361; // 1.12.0.3, 1.12.0.4, 1.12.0.6, 1.12.0.9, 1.12.0.10, 1.12.0.11, 1.12.0.12, 1.12.0.13, 1.12.0.14
+	const PROTOCOL_370 = 370; // 1.13.0.1, 1.13.0.2
+	const PROTOCOL_371 = 371; // 1.13.0.4, 1.13.0.5, 1.13.0.6
+	const PROTOCOL_385 = 385; // 1.13.0.7, 1.13.0.9, 1.13.0.10
+	const PROTOCOL_386 = 386; // 1.13.0.12
+	const PROTOCOL_387 = 387; // 1.13.0.15
+	const PROTOCOL_388 = 388; // 1.13.0.16, 1.13.0.17, 1.13.0, 1.13.1, 1.13.2, 1.13.3
+	const PROTOCOL_389 = 389; // 1.13.0.18, 1.14.0.2, 1.14.0.3, 1.14.0.4, 1.14.0.6, 1.14.0.50, 1.14.0.51, 1.14.0.52, 1.14.0, 1.14.0.12, 1.14.1.2, 1.14.1.3, 1.14.1, 1.14.2.50, 1.14.2.51, 1.14.25.1, 1.14.20, 1.14.30.51, 1.14.30, 1.14.41
+	const PROTOCOL_390 = 390; // 1.14.0.1, 1.14.60
+	const PROTOCOL_391 = 391; // 1.15.0.8, 1.15.0.9, 1.15.0.11
+	const PROTOCOL_392 = 392; // 1.15.0.51
+	const PROTOCOL_393 = 393; // 1.15.0.53
+	const PROTOCOL_394 = 394; // 1.15.0.54
+	const PROTOCOL_395 = 395; // 1.15.0.55
+	const PROTOCOL_396 = 396; // 1.15.0.56
+	const PROTOCOL_400 = 400; // 1.16.0.51
+	const PROTOCOL_401 = 401; // 1.16.0.53, 1.16.0.58, 1.16.0.59
+	const PROTOCOL_402 = 402; // 1.16.0.55
+	const PROTOCOL_403 = 403; // 1.16.0.57
+	const PROTOCOL_404 = 404; // 1.16.0.60
+	const PROTOCOL_405 = 405; // 1.16.0.61
+	const PROTOCOL_406 = 406; // 1.16.0.63
+	const PROTOCOL_407 = 407; // 1.16.0.64
+	const PROTOCOL_408 = 408; // 1.16.20.53, 1.16.20.54, 1.16.20
+	const PROTOCOL_409 = 409; // 1.16.100.50
+    const PROTOCOL_410 = 410; // 1.16.100.51
+    const PROTOCOL_411 = 411; // 1.16.100.52
+	const PROTOCOL_412 = 412; // 1.16.100.53
+	const PROTOCOL_413 = 413; // 1.16.100.54
+	const PROTOCOL_414 = 414; // 1.16.100.55
+	const PROTOCOL_415 = 415; // 1.16.100.56
+	const PROTOCOL_416 = 416; // 1.16.100.57
+	const PROTOCOL_417 = 417; // 1.16.100.58
+	const PROTOCOL_418 = 418; // 1.16.100.59
+	const PROTOCOL_419 = 419; // 1.16.200.51
+	const PROTOCOL_420 = 420; // 1.16.200.52
+	const PROTOCOL_421 = 421; // 1.16.100.60, 1.16.100, 1.16.101
+	const PROTOCOL_422 = 422; // 1.16.200.56
+	const PROTOCOL_423 = 423; // 1.16.210.50, 1.16.210.51
+	const PROTOCOL_424 = 424; // 1.16.210.53
+	const PROTOCOL_425 = 425; // 1.16.210.54, 1.16.210.55
+	const PROTOCOL_427 = 427; // 1.16.210.56, 1.16.210.57
+	const PROTOCOL_428 = 428; // 1.16.210.58, 1.16.210.59, 1.16.210.60, 1.16.210.61, 1.16.210
+	const PROTOCOL_429 = 429; // 1.16.220.50
+	const PROTOCOL_430 = 430; // 1.16.220.51
+	const PROTOCOL_431 = 431; // 1.16.220.52, 1.16.220, 1.16.221
+	const PROTOCOL_433 = 433; // 1.16.230.50
+	const PROTOCOL_434 = 434; // 1.16.230.52
+	const PROTOCOL_435 = 435; // 1.16.230.54, 1.16.230.56
+	const PROTOCOL_437 = 437; // 1.17.0.50, 1.17.0.52
+	const PROTOCOL_440 = 440; // 1.17.0.54, 1.17.0.56, 1.17.0.58, 1.17.0, 1.17.1, 1.17.2
+	const PROTOCOL_441 = 441; // 1.17.10.20, 1.17.10.21
+	const PROTOCOL_448 = 448; // 1.17.10.22, 1.17.10.23, 1.17.10, 1.17.11
+	const PROTOCOL_453 = 453; // 1.17.20.20
+	const PROTOCOL_455 = 455; // 1.17.20.21
+	const PROTOCOL_456 = 456; // 1.17.20.22
+	const PROTOCOL_459 = 459; // 1.17.20.23
+	const PROTOCOL_462 = 462; // 1.17.30.20, 1.17.30.21
+	const PROTOCOL_464 = 464; // 1.17.30.22
+	const PROTOCOL_465 = 465; // 1.17.30.25, 1.17.30
+	const PROTOCOL_471 = 471; // 1.17.40.20, 1.17.40.21
+	const PROTOCOL_474 = 474; // 1.18.0.20, 1.18.0.21
+	const PROTOCOL_475 = 475; // 1.18.0.24, 1.18.0.25, 1.18.0.27. 1.18.0
+	const PROTOCOL_476 = 476; // 1.18.0.22, 1.18.0.23, 1.18.10.20, 1.18.10.21
+	const PROTOCOL_477 = 477; // 1.18.10.22
+	const PROTOCOL_479 = 479; // 1.18.10.24
+	const PROTOCOL_485 = 485; // 1.18.10.26
+	
+	/** OUTDATED (supporting will be removed with next release, may didn't work properly)*/
+	const PROTOCOL_120 = 120; // 1.2.0.xx (beta)
+	const PROTOCOL_121 = 121; // 1.2.0.xx (beta)
+	const PROTOCOL_130 = 130; // 1.2.0.xx (beta)
+	const PROTOCOL_131 = 131; // 1.2.0.xx (beta)
+	const PROTOCOL_132 = 132; // 1.2.0.15 (beta)
+	const PROTOCOL_133 = 133; // 1.2.0.18 (beta)
+
+	/**
+	 * Minecraft: PE packets
+	 */
+	const LOGIN_PACKET = 0x01;
+	const PLAY_STATUS_PACKET = 0x02;
+	const CLIENT_TO_SERVER_HANDSHAKE_PACKET = 0x04;
+	const DISCONNECT_PACKET = 0x05;
+	const BATCH_PACKET = 0xfe;
+	const RESOURCE_PACKS_INFO_PACKET = 0x06;
+	const RESOURCE_PACKS_STACK_PACKET = 0x07;
+	const RESOURCE_PACKS_CLIENT_RESPONSE_PACKET = 0x08;
+	const TEXT_PACKET = 0x0a;
+	const SET_TIME_PACKET = 0x0b;
+	const START_GAME_PACKET = 0x0c;
+	const ADD_PLAYER_PACKET = 0x0d;
+	const ADD_ENTITY_PACKET = 0x0e;
+	const REMOVE_ENTITY_PACKET = 0x0f;
+	const ADD_ITEM_ENTITY_PACKET = 0x10;
+//	const ADD_HANGING_ENTITY_PACKET = 0x11;
+	const TAKE_ITEM_ENTITY_PACKET = 0x12;
+	const MOVE_ENTITY_PACKET = 0x13;
+	const MOVE_PLAYER_PACKET = 0x14;
+//	const RIDER_JUMP_PACKET = 0x15;
+	const REMOVE_BLOCK_PACKET = 0x16;
+	const UPDATE_BLOCK_PACKET = 0x17;	
+	const ADD_PAINTING_PACKET = 0x18;
+	const EXPLODE_PACKET = 0x19;
+	const LEVEL_SOUND_EVENT_PACKET = 0x1a;
+	const LEVEL_EVENT_PACKET = 0x1b;	
+	const TILE_EVENT_PACKET = 0x1c;
+	const ENTITY_EVENT_PACKET = 0x1d;
+	const MOB_EFFECT_PACKET = 0x1e;
+	const UPDATE_ATTRIBUTES_PACKET = 0x1f;	
+	const MOB_EQUIPMENT_PACKET = 0x20;
+	const MOB_ARMOR_EQUIPMENT_PACKET = 0x21;
+	const INTERACT_PACKET = 0x22;
+	const USE_ITEM_PACKET = 0x23;
+	const PLAYER_ACTION_PACKET = 0x24;
+//	const PLAYER_FALL = 0x25;
+	const HURT_ARMOR_PACKET = 0x26;	
+	const SET_ENTITY_DATA_PACKET = 0x27;
+	const SET_ENTITY_MOTION_PACKET = 0x28;
+	const SET_ENTITY_LINK_PACKET = 0x29;
+	const SET_HEALTH_PACKET = 0x2a;
+	const SET_SPAWN_POSITION_PACKET = 0x2b;
+	const ANIMATE_PACKET = 0x2c;
+	const RESPAWN_PACKET = 0x2d;
+	const DROP_ITEM_PACKET = 0x2e;
+//	const INVENTORY_ACTION_PACKET = 0x2f;
+	const CONTAINER_OPEN_PACKET = 0x30;
+	const CONTAINER_CLOSE_PACKET = 0x31;
+	const CONTAINER_SET_SLOT_PACKET = 0x32;
+	const CONTAINER_SET_DATA_PACKET = 0x33;
+	const CONTAINER_SET_CONTENT_PACKET = 0x34;
+	const CRAFTING_DATA_PACKET = 0x35;
+	const CRAFTING_EVENT_PACKET = 0x36;
+	const ADVENTURE_SETTINGS_PACKET = 0x37;
+	const TILE_ENTITY_DATA_PACKET = 0x38;
+	const PLAYER_INPUT_PACKET = 0x39;
+	const FULL_CHUNK_DATA_PACKET = 0x3a;
+	const SET_COMMANDS_ENABLED_PACKET = 0x3b;
+	const SET_DIFFICULTY_PACKET = 0x3c;
+	const CHANGE_DIMENSION_PACKET = 0x3d;
+	const SET_PLAYER_GAMETYPE_PACKET = 0x3e;
+	const PLAYER_LIST_PACKET = 0x3f;
+//	const TELEMETRY_EVENT_PACKET = 0x40; // ??? EVENT_PACKET in 0.15.90.8
+	const SPAWN_EXPERIENCE_ORB_PACKET = 0x42;
+	const CLIENTBOUND_MAP_ITEM_DATA_PACKET = 0x43;
+	const MAP_INFO_REQUEST_PACKET = 0x44;
+	const REQUEST_CHUNK_RADIUS_PACKET = 0x45;
+	const CHUNK_RADIUS_UPDATE_PACKET = 0x46;
+	const ITEM_FRAME_DROP_ITEM_PACKET = 0x47;
+//	const REPLACE_SELECTED_ITEM_PACKET = 0x47;
+	const GAME_RULES_CHANGED_PACKET = 0x48;
+//	const CAMERA_PACKET = 0x49;
+//	const ADD_ITEM_PACKET = 0x4a;
+	const BOSS_EVENT_PACKET = 0x4b;
+//	const SHOW_CREDITS_PACKET = 0x4c;
+	const AVAILABLE_COMMANDS_PACKET = 0x4d;
+	const COMMAND_STEP_PACKET = 0x4e;
+	const RESOURCE_PACK_DATA_INFO_PACKET = 0x52;
+	const RESOURCE_PACK_CHUNK_DATA_PACKET = 0x53;
+	const RESOURCE_PACK_CHUNK_REQUEST_PACKET = 0x54;
+	const TRANSFER_PACKET = 0x56;
+	const PLAYER_ENCHANT_OPTIONS_PACKET = 0x92;				// NEW 406 || 407
+	const ITEM_COMPONENT_PACKET = 0xA2; 					// NEW 419
+	const CREATIVE_CONTENT_PACKET = 0x91; 					// NEW 419
+}
