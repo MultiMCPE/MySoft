@@ -711,6 +711,10 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 	 * @return bool
 	 */
 	public function hasPermission($name){
+		if($this->closed){
+			throw new \Exception("Trying to get permissions of closed player");
+		}
+		
 		return $this->perm->hasPermission($name);
 	}
 
@@ -722,6 +726,9 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 	 * @return permission\PermissionAttachment
 	 */
 	public function addAttachment(Plugin $plugin, $name = null, $value = null){
+		if($this->closed){
+			throw new \InvalidStateException("Player is closed!");
+		}
 		return $this->perm->addAttachment($plugin, $name, $value);
 	}
 
@@ -1618,6 +1625,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 						$this->portalTime = 0;
 					}
 				}
+				$this->checkChunks();
 			}
 			if(!$this->isSleeping()){
 				$this->processMovement($tickDiff);
