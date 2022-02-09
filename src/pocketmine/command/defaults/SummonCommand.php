@@ -32,6 +32,126 @@ use pocketmine\nbt\tag\Compound;
 use pocketmine\nbt\tag\DoubleTag;
 use pocketmine\nbt\tag\Enum;
 use pocketmine\nbt\tag\FloatTag;
+use pocketmine\entity\Ageable;
+use pocketmine\entity\Animal;
+use pocketmine\entity\ArmorStand;
+use pocketmine\entity\Arrow;
+use pocketmine\entity\Attachable;
+use pocketmine\entity\Axolotl;
+use pocketmine\entity\BaseEntity;
+use pocketmine\entity\Bat;
+use pocketmine\entity\Blaze;
+use pocketmine\entity\BlazeFireball;
+use pocketmine\entity\BlueWitherSkull;
+use pocketmine\entity\Boat;
+use pocketmine\entity\Boss;
+use pocketmine\entity\BottleOEnchanting;
+use pocketmine\entity\Camera;
+use pocketmine\entity\Car;
+use pocketmine\entity\CaveSpider;
+use pocketmine\entity\Chalkboard;
+use pocketmine\entity\Chicken;
+use pocketmine\entity\Colorable;
+use pocketmine\entity\Cow;
+use pocketmine\entity\Creature;
+use pocketmine\entity\Creeper;
+use pocketmine\entity\Damageable;
+use pocketmine\entity\Donkey;
+use pocketmine\entity\Dragon;
+use pocketmine\entity\DragonFireBall;
+use pocketmine\entity\Effect;
+use pocketmine\entity\Egg;
+use pocketmine\entity\ElderGuardian;
+use pocketmine\entity\EnderCrystal;
+use pocketmine\entity\EnderDragon;
+use pocketmine\entity\EnderPearl;
+use pocketmine\entity\Enderman;
+use pocketmine\entity\Endermite;
+use pocketmine\entity\EvocationFangs;
+use pocketmine\entity\Evoker;
+use pocketmine\entity\ExperienceOrb;
+use pocketmine\entity\Explosive;
+use pocketmine\entity\FallingSand;
+use pocketmine\entity\FireBall;
+use pocketmine\entity\FireworkRocket;
+use pocketmine\entity\FishingHook;
+use pocketmine\entity\FloatingText;
+use pocketmine\entity\FlyingAnimal;
+use pocketmine\entity\FlyingEntity;
+use pocketmine\entity\Ghast;
+use pocketmine\entity\GhastFireball;
+use pocketmine\entity\Giant;
+use pocketmine\entity\Guardian;
+use pocketmine\entity\Hanging;
+use pocketmine\entity\Herobrine;
+use pocketmine\entity\Horse;
+use pocketmine\entity\Human;
+use pocketmine\entity\Husk;
+use pocketmine\entity\Illager;
+use pocketmine\entity\Illusioner;
+use pocketmine\entity\InstantEffect;
+use pocketmine\entity\IronGolem;
+use pocketmine\entity\Item;
+use pocketmine\entity\JumpingEntity;
+use pocketmine\entity\Koni;
+use pocketmine\entity\LavaSlime;
+use pocketmine\entity\LearnToCodeMascot;
+use pocketmine\entity\LeashKnot;
+use pocketmine\entity\Lightning;
+use pocketmine\entity\Living;
+use pocketmine\entity\Llama;
+use pocketmine\entity\MagmaCube;
+use pocketmine\entity\Minecart;
+use pocketmine\entity\MinecartChest;
+use pocketmine\entity\MinecartCommandBlock;
+use pocketmine\entity\MinecartHopper;
+use pocketmine\entity\MinecartTNT;
+use pocketmine\entity\Monster;
+use pocketmine\entity\Mooshroom;
+use pocketmine\entity\Mule;
+use pocketmine\entity\NPC;
+use pocketmine\entity\NPCHuman;
+use pocketmine\entity\Ocelot;
+use pocketmine\entity\Painting;
+use pocketmine\entity\Parrot;
+use pocketmine\entity\Pig;
+use pocketmine\entity\PigZombie;
+use pocketmine\entity\PolarBear;
+use pocketmine\entity\PrimedTNT;
+use pocketmine\entity\Projectile;
+use pocketmine\entity\ProjectileSource;
+use pocketmine\entity\Rabbit;
+use pocketmine\entity\RideEntity;
+use pocketmine\entity\Rideable;
+use pocketmine\entity\Sheep;
+use pocketmine\entity\Shulker;
+use pocketmine\entity\ShulkerBullet;
+use pocketmine\entity\Silverfish;
+use pocketmine\entity\Skeleton;
+use pocketmine\entity\SkeletonHorse;
+use pocketmine\entity\Skin;
+use pocketmine\entity\Slime;
+use pocketmine\entity\SnowGolem;
+use pocketmine\entity\Snowball;
+use pocketmine\entity\Spider;
+use pocketmine\entity\SplashPotion;
+use pocketmine\entity\Squid;
+use pocketmine\entity\Stray;
+use pocketmine\entity\Tameable;
+use pocketmine\entity\Vehicle;
+use pocketmine\entity\Vex;
+use pocketmine\entity\Villager;
+use pocketmine\entity\Vindicator;
+use pocketmine\entity\WalkingEntity;
+use pocketmine\entity\WaterAnimal;
+use pocketmine\entity\Witch;
+use pocketmine\entity\Wither;
+use pocketmine\entity\WitherSkeleton;
+use pocketmine\entity\Wolf;
+use pocketmine\entity\XPOrb;
+use pocketmine\entity\Zombie;
+use pocketmine\entity\ZombieHorse;
+use pocketmine\entity\ZombieVillager;
 
 class SummonCommand extends VanillaCommand {
 
@@ -123,17 +243,15 @@ class SummonCommand extends VanillaCommand {
 
 		if(count($args) == 1){
 			if($sender instanceof Player){
-				$x = $sender->x;
-				$y = $sender->y;
-				$z = $sender->z;
+				$x = (int) $sender->x;
+				$y = (int) $sender->y;
+				$z = (int) $sender->z;
 			}else{
 				$sender->sendMessage(TextFormat::RED . "You must specify a position where the entity is spawned to when using in console");
 				return false;
 			}
 		} //finish setting the location
 
-		$entity = null;
-		$type = $args[0];
 		$level = ($sender instanceof Player) ? $sender->getLevel() : $sender->getServer()->getDefaultLevel();
 		$nbt = new Compound("", [
 			"Pos" => new Enum("Pos", [
@@ -151,19 +269,16 @@ class SummonCommand extends VanillaCommand {
 				new FloatTag("", 0)
 			]),
 		]);
-		if(count($args) == 5 and $args[4][0] == "{"){//Tags are found
-			$nbtExtra = JsonNBTParser::parseJSON($args[4]);
-			$nbt = NBT::combineCompoundTags($nbt, $nbtExtra, true);
-		}
 
-		$entity = Entity::createEntity($type, $level->getChunk($x >> 4, $z >> 4), $nbt);
-		//if($entity instanceof Entity){
+		$class = "pocketmine\\entity\\" . ucfirst(strtolower($args[0]));
+		$entity = Entity::createEntity($class::NETWORK_ID, $level->getChunk($x >> 4, $z >> 4), $nbt);
+		if($entity instanceof Entity){
 			$entity->spawnToAll();
-			$sender->sendMessage("Successfully spawned entity $type at ($x, $y, $z)");
+			$sender->sendMessage("Призвано существо" . ucfirst(strtolower($args[0])) . " на ($x, $y, $z)");
 			return true;
-		//}else{
-			$sender->sendMessage(TextFormat::RED . "An error occurred when spawning the entity $type");
+		}else{
+			$sender->sendMessage(TextFormat::RED . "Не удалось призвать $type");
 			return false;
-		//}
+		}
 	}
 }

@@ -714,7 +714,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 		if($this->closed){
 			throw new \Exception("Trying to get permissions of closed player");
 		}
-		
+
 		return $this->perm->hasPermission($name);
 	}
 
@@ -846,7 +846,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 	 */
 	public function setDisplayName($name){
 		$this->displayName = $name;
-		
+
 		if ($this->spawned) {
 		    $this->server->updatePlayerListData($this->getUniqueId(), $this->getId(), $this->getDisplayName(), $this->getSkinName(), $this->getSkinData(), $this->getSkinGeometryName(), $this->getSkinGeometryData(), $this->getCapeData(), $this->getOriginalProtocol() >= Info::PROTOCOL_140 ? $this->getXUID() : "", $this->getDeviceOS(), $this->getAdditionalSkinData());
 		}
@@ -912,7 +912,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 
 	public function useChunk($x, $z){
         $this->usedChunks[Level::chunkHash($x, $z)] = true;
-	    
+
 		$this->chunkLoadCount++;
 
 		if($this->spawned){
@@ -941,7 +941,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 			if($count >= $this->chunksPerTick){
 				break;
 			}
-			
+
 			$X = null;
 			$Z = null;
 			Level::getXZ($index, $X, $Z);
@@ -951,11 +951,11 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 
 			$this->level->useChunk($X, $Z, $this, false);
 			$this->useChunk($X, $Z);
-			
+
 			if(!$this->level->populateChunk($X, $Z, true)){
 				continue;
 			}
-			
+
 			unset($this->loadQueue[$index]);
 			$this->level->requestChunk($X, $Z, $this);
 		}
@@ -1064,7 +1064,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 		if($this->spawned){
 			return; //avoid player spawning twice (this can only happen on 3.x with a custom malicious client)
 		}
-		
+
 		$this->spawned = true;
 		$this->sendSettings();
 		$this->sendPotionEffects($this);
@@ -1077,7 +1077,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 		$pk->started = $this->level->stopTime == false;
 		$this->dataPacket($pk);
 		$this->setDaylightCycle(!$this->level->stopTime);
-		
+
 		$this->level->getWeather()->sendWeather($this);
 
 		$this->noDamageTicks = 60;
@@ -1093,7 +1093,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 		$this->setInteractButtonText('', true);
 
 	    $this->server->getPluginManager()->callEvent($ev = new PlayerJoinEvent($this, ""));
-	    
+
 		$this->server->onPlayerLogin($this);
     }
 
@@ -2635,7 +2635,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 				    $this->server->getNetwork()->blockAddress($this->getAddress(), 3000);
 				    break;
 			    }
-			    
+
 			    $this->setViewDistance($radius);
 				break;
 			case 'COMMAND_STEP_PACKET':
@@ -2805,14 +2805,14 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 			case 'PLAYER_SKIN_PACKET':
 				if ($this->setSkin($packet->newSkinByteData, $packet->newSkinId, $packet->newSkinGeometryName, $packet->newSkinGeometryData, $packet->newCapeByteData, $packet->isPremiumSkin, true)) {
 					$this->additionalSkinData = $packet->additionalSkinData;
-					
+
 	            	$pk = new RemoveEntityPacket();
 	            	$pk->eid = $this->getId();
-	            	
+
 	            	$pk2 = new PlayerListPacket();
 	            	$pk2->type = PlayerListPacket::TYPE_REMOVE;
 	            	$pk2->entries[] = [$this->getUniqueId()];
-	            	
+
 	            	$pk3 = new AddPlayerPacket();
 	            	$pk3->uuid = $this->getUniqueId();
 	            	$pk3->username = $this->getName();
@@ -2826,7 +2826,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 	            	$pk3->yaw = $this->yaw;
 	            	$pk3->pitch = $this->pitch;
 	            	$pk3->metadata = $this->dataProperties;
-	            	
+
 	            	$oldViewers = [];
 	            	$recipients = $this->server->getOnlinePlayers();
 	     	        foreach ($recipients as $viewer) {
@@ -2834,11 +2834,11 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 			            	$oldViewers[] = $viewer;
 		            	}
 	     	        }
-	     	        
+
 	            	if (!empty($oldViewers)) {
 		            	$this->server->batchPackets($oldViewers, [$pk, $pk2, $pk3]);
 	            	}
-	            	
+
 					$this->server->updatePlayerListData($this->getUniqueId(), $this->getId(), $this->getDisplayName(), $this->getSkinName(), $this->getSkinData(), $this->getSkinGeometryName(), $this->getSkinGeometryData(), $this->getCapeData(), $this->getOriginalProtocol() >= Info::PROTOCOL_140 ? $this->getXUID() : "", $this->getDeviceOS(), $this->getAdditionalSkinData());
 				}
 				break;
@@ -5042,16 +5042,16 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 				$ev = new PlayerMoveEvent($this, $from, $to);
 				$this->setMoving(true);
 				$this->server->getPluginManager()->callEvent($ev);
-				
+
 				if ($ev->isCancelled()) {
 					$this->revertMovement($this, $this->lastYaw, $this->lastPitch);
 					return;
 				}
-				
+
 		    	if ($this->nextChunkOrderRun > 20) {
 			        $this->nextChunkOrderRun = 20;
 		    	}
-				
+
 				if($this->server->netherEnabled){
 					if($this->isInsideOfPortal()){
 						if($this->portalTime == 0){

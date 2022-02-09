@@ -14,7 +14,7 @@ messages:
 
  #Message shown by default when a player doesn't have permissions to use a command
  #Can be overriden by the command
- command-permissions: "§8[§l§bMineTrade§r§8] §fНет возможности."
+ command-permissions: "§cНетдостаточно прав"
 
 level:
  #Enables weather in worlds
@@ -41,9 +41,9 @@ main:
  session-port-checking: true
 
  #Enables EnderCrystals on your server
- ender-crystals: false
+ ender-crystals: true
  #Enables explode blocks when the ender crystal explodes
- explode-blocks: false
+ explode-blocks: true
  
 nether:
  #Нижний мир (ад)

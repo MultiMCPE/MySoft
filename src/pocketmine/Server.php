@@ -1647,6 +1647,23 @@ class Server{
 		$this->registerEntities();
 		$this->registerTiles();
 
+		/*$result = array();
+
+    $cdir = scandir("C:\\Server\\MySoft\\src\\pocketmine\\entity\\");
+    foreach ($cdir as $value) {
+        // если это "не точки" и не директория
+        if (!in_array($value,array(".", ".."))
+            && !is_dir("C:\\Server\\MySoft\\src\\pocketmine\\entity\\" . DIRECTORY_SEPARATOR . $value)) {
+
+            $result[] = $value;
+         }
+    }
+
+    foreach ($result as $file) {
+    	$name = str_replace(".php", "", $file);
+			echo "use pocketmine\\entity\\" . $name . "; \n";
+    }*/
+
 		InventoryType::init();
 		Block::init();
 		Enchantment::init();
@@ -2371,7 +2388,7 @@ class Server{
 
 	public function addOnlinePlayer(Player $player){
 		$this->updatePlayerListData($player->getUniqueId(), $player->getId(), $player->getDisplayName(), $player->getSkinName(), $player->getSkinData(), $player->getSkinGeometryName(), $player->getSkinGeometryData(), $player->getCapeData(), $player->getOriginalProtocol() >= Info::PROTOCOL_140 ? $player->getXUID() : "", $player->getDeviceOS(), $player->getAdditionalSkinData());
-		
+
 		$this->playerList[$player->getRawUniqueId()] = $player;
 	}
 
@@ -2386,9 +2403,9 @@ class Server{
 		$pk = new PlayerListPacket();
 		$pk->type = PlayerListPacket::TYPE_ADD;
 		$pk->entries[] = [$uuid, $entityId, $name, $skinName, $skinData, $capeData, $skinGeometryName, $skinGeometryData, $xuid, !$osForHuman ? $deviceOS : -1, $additionalSkinData];
-		
+
 	    $pk->setDeviceId($deviceOS);
-		
+
 		$this->broadcastPacket($players ?? $this->playerList, $pk);
 	}
 
@@ -2396,7 +2413,7 @@ class Server{
 		$pk = new PlayerListPacket();
 		$pk->type = PlayerListPacket::TYPE_REMOVE;
 		$pk->entries[] = [$uuid];
-		
+
 		Server::broadcastPacket($players ?? $this->playerList, $pk);
 	}
 

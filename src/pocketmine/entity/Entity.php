@@ -567,6 +567,17 @@ abstract class Entity extends Location implements Metadatable{
 		return null;
 	}
 
+	public static function summon($type, FullChunk $chunk, Compound $nbt, $force = false) {
+		if($force){
+			$class = self::$knownEntities[$type::NETWORK_ID];
+			return new $class($chunk, $nbt, ...$args);
+		}elseif(isset(self::$knownEntities[$type])){
+			$class = self::$knownEntities[$type];
+			return new $class($chunk, $nbt, ...$args);
+		}
+		return null;
+	}
+
 	public static function registerEntity($className, $force = false) {
 		$class = new \ReflectionClass($className);
 		if (is_a($className, Entity::class, true) && !$class->isAbstract()) {
@@ -754,7 +765,7 @@ public function saveNBT(){
 				$cause === EntityDamageEvent::CAUSE_FIRE_TICK ||
 				$cause === EntityDamageEvent::CAUSE_LAVA)) {
 
-			//$source->setCancelled();
+			$source->setCancelled();
 		}
 
 		$this->server->getPluginManager()->callEvent($source);
