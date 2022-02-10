@@ -274,7 +274,7 @@ class SummonCommand extends VanillaCommand {
 		$entity = Entity::createEntity($class::NETWORK_ID, $level->getChunk($x >> 4, $z >> 4), $nbt);
 		if($entity instanceof Entity){
 			$entity->spawnToAll();
-			$sender->sendMessage("Призвано существо" . ucfirst(strtolower($args[0])) . " на ($x, $y, $z)");
+			$sender->sendMessage("Призвано существо " . ucfirst(strtolower($args[0])) . " на ($x, $y, $z)");
 			return true;
 		}else{
 			$sender->sendMessage(TextFormat::RED . "Не удалось призвать $type");

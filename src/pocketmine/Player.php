@@ -712,7 +712,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 	 */
 	public function hasPermission($name){
 		if($this->closed){
-			throw new \Exception("Trying to get permissions of closed player");
+			return false;
 		}
 
 		return $this->perm->hasPermission($name);
@@ -1899,7 +1899,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 				}
 
 				if($packet->isValidProtocol === false) {
-					$this->close("", $this->getNonValidProtocolMessage($this->protocol));
+					$this->close("", $this->getNonValidProtocolMessage($packet->protocol1));
 					break;
 				}
 
@@ -3870,6 +3870,10 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 	}
 
 	public function getProtectionEnchantments() {
+		if(!$this->loggedIn){
+			return false;
+		}
+
 		$result = [
 			Enchantment::TYPE_ARMOR_PROTECTION => null,
 			Enchantment::TYPE_ARMOR_FIRE_PROTECTION => null,
@@ -5233,12 +5237,12 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 			$pk = new PlayStatusPacket();
 			$pk->status = PlayStatusPacket::LOGIN_FAILED_SERVER;
 			$this->dataPacket($pk);
-			return TextFormat::WHITE . "§c* §fВаша версия Minecraft не поддерживается!";
+			return TextFormat::WHITE . "§c* §fВаша версия Minecraft не поддерживается! " . $protocol;
 		} else {
 			$pk = new PlayStatusPacket();
 			$pk->status = PlayStatusPacket::LOGIN_FAILED_CLIENT;
 			$this->dataPacket($pk);
-			return TextFormat::WHITE . "§c* §fОбновите майнкрафт.";
+			return TextFormat::WHITE . "§c* §fОбновите майнкрафт. " . $protocol;
 		}
 	}
 
