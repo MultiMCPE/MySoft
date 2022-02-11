@@ -1647,23 +1647,6 @@ class Server{
 		$this->registerEntities();
 		$this->registerTiles();
 
-		/*$result = array();
-
-    $cdir = scandir("C:\\Server\\MySoft\\src\\pocketmine\\entity\\");
-    foreach ($cdir as $value) {
-        // если это "не точки" и не директория
-        if (!in_array($value,array(".", ".."))
-            && !is_dir("C:\\Server\\MySoft\\src\\pocketmine\\entity\\" . DIRECTORY_SEPARATOR . $value)) {
-
-            $result[] = $value;
-         }
-    }
-
-    foreach ($result as $file) {
-    	$name = str_replace(".php", "", $file);
-			echo "use pocketmine\\entity\\" . $name . "; \n";
-    }*/
-
 		InventoryType::init();
 		Block::init();
 		Enchantment::init();
