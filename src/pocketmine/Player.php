@@ -2906,6 +2906,13 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 	}
 
 	protected function respawn() {
+		$pk = new RespawnPacket();
+		$pos = $this->getSpawn();
+		$pk->x = $pos->x;
+		$pk->y = $pos->y +  $this->getEyeHeight();
+		$pk->z = $pos->z;
+		$this->dataPacket($pk);
+
 		$this->craftingType = self::CRAFTING_DEFAULT;
 
 		$this->server->getPluginManager()->callEvent($ev = new PlayerRespawnEvent($this, $this->getSpawn()));
