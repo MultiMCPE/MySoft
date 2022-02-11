@@ -530,7 +530,7 @@ class Level implements ChunkManager, Metadatable{
 	    if ($autoLoad) {
 	    	$this->loadChunk($X, $Z);
 	    }
-	    
+
 		$this->usedChunks[self::chunkHash($X, $Z)][$player->getId()] = $player;
 	}
 
@@ -1984,14 +1984,14 @@ class Level implements ChunkManager, Metadatable{
 
         return $result;
     }
-    
+
 	public function generateChunkCallback($x, $z, FullChunk $chunk){
 		if ($this->closed || is_null($this->generator)) {
 			return;
 		}
-		
+
         Timings::$generationCallbackTimer->startTiming();
-        
+
 		$oldChunk = $this->getChunk($x, $z, false);
 		$index = Level::chunkHash($x, $z);
 
@@ -2009,7 +2009,7 @@ class Level implements ChunkManager, Metadatable{
 		if($chunk !== null and ($oldChunk === null or $oldChunk->isPopulated() === false) and $chunk->isPopulated()){
 			$this->server->getPluginManager()->callEvent(new ChunkPopulateEvent($chunk));
 		}
-		
+
         Timings::$generationCallbackTimer->stopTiming();
 	}
 
@@ -2098,19 +2098,19 @@ class Level implements ChunkManager, Metadatable{
 
 	public function requestChunk($x, $z, $player) {
         $this->timings->syncChunkSendTimer->startTiming();
-	    
+
 		$protocol = Network::getChunkPacketProtocol($player->getPlayerProtocol());
 		$chunkIndex = Level::chunkHash($x, $z);
-		
+
 		if (isset($this->chunkCache[$chunkIndex][$protocol])) {
 		    $player->dataPacket($this->chunkCache[$chunkIndex][$protocol]);
 		    return;
 		}
-		
+
 		$data = $this->provider->requestChunkTask($x, $z);
 		$chunk = $this->doChunk($player, $x, $z, $protocol, $data);
 		$this->chunkCache[$chunkIndex][$protocol] = $chunk;
-		
+
         $this->timings->syncChunkSendTimer->stopTiming();
 	}
 
@@ -2634,12 +2634,12 @@ class Level implements ChunkManager, Metadatable{
 		if (empty($viewers)) {
 			return;
 		}
-		
+
 		$singleMotionData = [$entityId, $x, $y, $z];
-		
+
 		$pk = new SetEntityMotionPacket();
 		$pk->entities = [$singleMotionData];
-		
+
 		$this->server->broadcastPacket($viewers, $pk);
 	}
 
@@ -2647,9 +2647,9 @@ class Level implements ChunkManager, Metadatable{
 		if (empty($viewers)) {
 			return;
 		}
-		
+
 		$singleMoveData = [$entityId, $x, $y, $z, $yaw, $headYaw === null ? $yaw : $headYaw, $pitch];
-		
+
 		if ($isPlayer) {
 			$pk = new MovePlayerPacket();
 			$pk->eid = $singleMoveData[0];
@@ -2659,12 +2659,14 @@ class Level implements ChunkManager, Metadatable{
 			$pk->pitch = $singleMoveData[6];
 			$pk->yaw = $singleMoveData[5];
 			$pk->bodyYaw = $singleMoveData[4];
+			$this->server->broadcastPacket($viewers, $pk);
 		} else {
-			$pk = new MoveEntityPacket();
-			$pk->entities = [$singleMoveData];
+			foreach($viewers as $player){
+				$pk = new MoveEntityPacket();
+				$pk->entities = [$singleMoveData];
+				$player->dataPacket($pk);
+			}
 		}
-		
-		$this->server->broadcastPacket($viewers, $pk);
 	}
 
 	public function addPlayerHandItem($sender, $recipient){
@@ -2703,19 +2705,19 @@ class Level implements ChunkManager, Metadatable{
 		$chunk = $this->getChunk($x, $z, true);
 		if(!$chunk->isPopulated()){
             Timings::$populationTimer->startTiming();
-            
+
 			$this->chunkPopulationQueue[$index] = true;
 			for($xx = -1; $xx <= 1; ++$xx){
 				for($zz = -1; $zz <= 1; ++$zz){
 					$this->chunkPopulationLock[Level::chunkHash($x + $xx, $z + $zz)] = true;
 				}
 			}
-			
+
 			$task = new PopulationTask($this, $chunk);
 			$this->server->getScheduler()->scheduleAsyncTask($task);
-			
+
             Timings::$populationTimer->stopTiming();
-            
+
 			return false;
 		}
 
@@ -2744,7 +2746,7 @@ class Level implements ChunkManager, Metadatable{
 		}
 		return false;
 	}
-	
+
 	protected function doChunk($p, $chunkX, $chunkZ, $protocol, $data){
 		$isAnvil = isset($data['isAnvil']) && $data['isAnvil'] == true;
 
@@ -2762,12 +2764,12 @@ class Level implements ChunkManager, Metadatable{
 				$chunkData .= chr(0); //0 layers - client will treat this as all-air
 			}
 		}
-		
+
 		if ($isAnvil) {
 		    if($protocol < Info::PROTOCOL_360){
 		    	$chunkData = chr(count($data['chunk']['sections']));
 		    }
-		    
+
 			foreach ($data['chunk']['sections'] as $y => $sections) {
 				if ($sections['empty'] == true) {
 				    $chunkData .= $protocol >= Info::PROTOCOL_120 ? "\x00" . str_repeat("\x00", 6144) : "\x00" . str_repeat("\x00", 10240);
@@ -2779,11 +2781,11 @@ class Level implements ChunkManager, Metadatable{
 					}
 				}
 			}
-			
+
 			if ($protocol < Info::PROTOCOL_360) {
 				$chunkData .= $data['chunk']['heightMap'];
 			}
-			
+
 			$biomes = $protocol >= Info::PROTOCOL_360 ? $data["chunk"]["biomeColor"] : $data['chunk']['biomeColor'] . Binary::writeByte(0) . Binary::writeSignedVarInt(0) . implode('', $data['tiles']);
 		} else {
 			$blockIdArray = $data['blocks'];
@@ -2793,7 +2795,7 @@ class Level implements ChunkManager, Metadatable{
 				if($protocol < Info::PROTOCOL_360){
 				    $chunkData = chr($countBlocksInChunk);
 				}
-				
+
 				for ($blockIndex = 0; $blockIndex < $countBlocksInChunk; $blockIndex++) {
 					$blockIdData = '';
 					$blockDataData = '';
@@ -2824,10 +2826,10 @@ class Level implements ChunkManager, Metadatable{
 					$chunkData .= "\x00" . $blockIdData . $blockDataData . $skyLightData . $blockLightData;
 				}
 			}
-			
+
 			$biomes = $protocol >= Info::PROTOCOL_360 ? $data["biomeColor"] : $data['heightMap'] . $data['biomeColor'] . Binary::writeLInt(0) . implode('', $data['tiles']);
 		}
-		
+
 		if($protocol >= Info::PROTOCOL_475){
 			for($i = 0; $i < 25; ++$i){
 				$chunkData .= chr(0); //fake biome palette - 0 bpb, non-persistent
@@ -2836,23 +2838,23 @@ class Level implements ChunkManager, Metadatable{
 		}else{
 			$chunkData .= $biomes;
 		}
-		
+
 		if($protocol >= Info::PROTOCOL_360){
 	    	$chunkData .= Binary::writeByte(0) . implode('', $data['tiles']);
 		}
-		
+
 		$pk = new FullChunkDataPacket();
 		$pk->chunkX = $chunkX;
 		$pk->chunkZ = $chunkZ;
 		$pk->subChunkCount = $subChunkCount;
 		$pk->data = $chunkData;
-		
+
 		$pk->encode($protocol);
-		
+
 		$batch = new BatchPacket();
 		$batch->payload = zlib_encode(Binary::writeVarInt(strlen($pk->getBuffer())) . $pk->getBuffer(), Player::getCompressAlg($protocol), 7);
 		$p->dataPacket($batch);
-		
+
         return $batch;
 	}
 }

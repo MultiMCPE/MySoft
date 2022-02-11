@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
@@ -31,6 +31,7 @@ class MoveEntityPacket extends PEPacket{
 
 	// eid, x, y, z, yaw, pitch
 	/** @var array[] */
+	public $player;
 	public $entities = [];
 	public $eid;
 	public $x;
@@ -39,7 +40,7 @@ class MoveEntityPacket extends PEPacket{
 	public $pitch;
 	public $yaw;
 	public $headYaw;
-	
+
 	public function clean(){
 		$this->entities = [];
 		return parent::clean();
@@ -54,7 +55,7 @@ class MoveEntityPacket extends PEPacket{
 			} else {
 				$this->getLShort();
 			}
-		} 		
+		}
 		$this->x = $this->getLFloat();
 		$this->y = $this->getLFloat();
 		$this->z = $this->getLFloat();
@@ -81,7 +82,7 @@ class MoveEntityPacket extends PEPacket{
 			$this->putLFloat($data[3]); //z
 			$this->putByte($data[6] * 0.71111); //pitch
 			$this->putByte($data[4] * 0.71111); //yaw
-			$this->putByte($data[5] * 0.71111); //headYaw	
+			$this->putByte($data[5] * 0.71111); //headYaw
 		} else {
 			$this->putVarInt($data[0]); //eid
 			$this->putLFloat($data[1]); //x

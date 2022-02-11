@@ -1127,6 +1127,10 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 		    	return false;
 	    	}
 
+				if($packet::PACKET_NAME == "MOVE_ENTITY_PACKET"){
+					$packet->player = $this;
+				}
+
 	    	if($packet->pname() == "BATCH_PACKET"){
 		    	$packet->encode($this->protocol);
 		    	$this->interface->putReadyPacket($this, $packet->getBuffer());

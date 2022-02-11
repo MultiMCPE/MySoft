@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
@@ -32,7 +32,7 @@ class MovePlayerPacket extends PEPacket{
 	const MODE_RESET = 1;
 	const MODE_TELEPORT = 2;
 	const MODE_ROTATION = 3;
-	
+
 	const TELEPORTATION_CAUSE_UNKNOWN = 0;
 	const TELEPORTATION_CAUSE_PROJECTILE = 1;
 	const TELEPORTATION_CAUSE_CHORUS_FRUIT = 2;
@@ -58,14 +58,14 @@ class MovePlayerPacket extends PEPacket{
 	public function decode($playerProtocol){
 		$this->getHeader($playerProtocol);
 		$this->eid = $this->getVarInt();
-		
+
 		$this->x = $this->getLFloat();
 		$this->y = $this->getLFloat();
 		$this->z = $this->getLFloat();
-		
+
 		$this->pitch = $this->getLFloat();
 		$this->yaw = $this->getLFloat();
-		
+
 		$this->bodyYaw = $this->getLFloat();
 		$this->mode = $this->getByte();
 		$this->onGround = $this->getByte() > 0;
@@ -74,14 +74,14 @@ class MovePlayerPacket extends PEPacket{
 	public function encode($playerProtocol){
 		$this->reset($playerProtocol);
 		$this->putVarInt($this->eid);
-		
+
 		$this->putLFloat($this->x);
 		$this->putLFloat($this->y);
 		$this->putLFloat($this->z);
-		
+
 		$this->putLFloat($this->pitch);
 		$this->putLFloat($this->yaw == 0 ? 0.1 : $this->yaw); //hack for 1.13 if send 0 client rotate to -180
-		
+
 		$this->putLFloat($this->bodyYaw);
 		$this->putByte($this->mode);
 		$this->putByte($this->onGround > 0);
