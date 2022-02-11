@@ -33,11 +33,11 @@ abstract class BaseEntity extends Creature{
 	private $friendly = false;
 	private $wallcheck = true;
 	protected $sprintTime = 0;
-	
+
 	protected $speed = 1;
-	
+
 	private static $closeMonsterOnDay = true;
-	
+
 	public static function setCloseMonsterOnDay($val) {
 		self::$closeMonsterOnDay = $val;
 	}
@@ -190,7 +190,7 @@ abstract class BaseEntity extends Creature{
 		if($this->moveTime > 0){
 			$this->moveTime -= $tickDiff;
 		}
-		
+
 		 if($this->sprintTime > 0){
 			$this->sprintTime -= $tickDiff;
 		}
@@ -198,14 +198,15 @@ abstract class BaseEntity extends Creature{
 		if($this->attackTime > 0){
 			$this->attackTime -= $tickDiff;
 		}
-		
-		if (self::$closeMonsterOnDay) {
+
+		/*if (self::$closeMonsterOnDay) {
 			$time =  $this->level->getTime() % 30000;
 			$isNight = $time > 16000 && $time < 29000;
 			if($this instanceof Monster && !($this instanceof Wolf) && !$isNight){
 				$this->close();
+				print_r("entityBaseTick BaseEntity \n");
 			}
-		}
+		}*/
 		//Timings::$timerEntityBaseTick->startTiming();
 		return $hasUpdate;
 	}
@@ -237,8 +238,8 @@ abstract class BaseEntity extends Creature{
 	public function targetOption(Creature $creature, float $distance){
 		return $this instanceof Monster && (!($creature instanceof Player) || ($creature->isSurvival() && $creature->spawned)) && $creature->isAlive() && !$creature->closed && $distance <= 81;
 	}
-	
-	
+
+
 	 public static function create($type, Position $source, ...$args){
 		$chunk = $source->getLevel()->getChunk($source->x >> 4, $source->z >> 4, true);
 		if(!$chunk->isGenerated()){
@@ -266,9 +267,9 @@ abstract class BaseEntity extends Creature{
 		]);
 		return Entity::createEntity($type, $chunk, $nbt, ...$args);
 	}
-	  
+
 	public function isNeedSaveOnChunkUnload() {
 		return false;
-	}  
+	}
 
 }
