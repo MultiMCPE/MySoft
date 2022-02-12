@@ -101,10 +101,10 @@ use pocketmine\network\protocol\ItemFrameDropItemPacket;
 use pocketmine\network\protocol\ItemComponentPacket;
 use pocketmine\network\protocol\{v403\EmotePacket, v392\CreativeContentPacket};
 
-class Network {	
-	
+class Network {
+
 	public static $BATCH_THRESHOLD = 512;
-	
+
 	/** @var \SplFixedArray */
 	private $packetPool110;
 	/** @var \SplFixedArray */
@@ -224,7 +224,7 @@ class Network {
 			$interface->setName($this->name);
 		}
 	}
-	
+
 	/**
 	 * @param int        $id 0-255
 	 * @param DataPacket $class
@@ -232,7 +232,7 @@ class Network {
 	public function registerPacket110($id, $class){
 		$this->packetPool110[$id] = new $class;
 	}
-	
+
 	/**
 	 * @param int        $id 0-255
 	 * @param DataPacket $class
@@ -240,7 +240,7 @@ class Network {
 	public function registerPacket120($id, $class){
 		$this->packetPool120[$id] = new $class;
 	}
-	
+
 	/**
 	 * @param int        $id 0-255
 	 * @param DataPacket $class
@@ -248,7 +248,7 @@ class Network {
 	public function registerPacket310($id, $class){
 		$this->packetPool310[$id] = new $class;
 	}
-	
+
 	/**
 	 * @param int        $id 0-255
 	 * @param DataPacket $class
@@ -256,7 +256,7 @@ class Network {
 	public function registerPacket331($id, $class){
 		$this->packetPool331[$id] = new $class;
 	}
-	
+
 	public function getServer(){
 		return $this->server;
 	}
@@ -292,7 +292,7 @@ class Network {
 			case Info::PROTOCOL_403:
 			case Info::PROTOCOL_404:
 			case Info::PROTOCOL_405:
-			case Info::PROTOCOL_406:	
+			case Info::PROTOCOL_406:
 			case Info::PROTOCOL_407:
 			case Info::PROTOCOL_408:
 			case Info::PROTOCOL_409:
@@ -304,8 +304,8 @@ class Network {
 			case Info::PROTOCOL_415:
 			case Info::PROTOCOL_416:
 			case Info::PROTOCOL_417:
-			case Info::PROTOCOL_418:	
-			case Info::PROTOCOL_419:	
+			case Info::PROTOCOL_418:
+			case Info::PROTOCOL_419:
 			case Info::PROTOCOL_420:
 			case Info::PROTOCOL_421:
 			case Info::PROTOCOL_422:
@@ -331,6 +331,7 @@ class Network {
 			case Info::PROTOCOL_465:
 			case Info::PROTOCOL_471:
 			case Info::PROTOCOL_475:
+			case Info::PROTOCOL_486:
 				$class = $this->packetPool331[$id];
 				break;
 			case Info::PROTOCOL_310:
@@ -361,10 +362,11 @@ class Network {
 		}
 		return null;
 	}
-	
+
 	public static function getChunkPacketProtocol($playerProtocol){
 		switch ($playerProtocol) {
 			case Info::PROTOCOL_475:
+			case Info::PROTOCOL_486:
 				return Info::PROTOCOL_475;
 			case Info::PROTOCOL_471:
 			case Info::PROTOCOL_465:
@@ -396,7 +398,7 @@ class Network {
 			case Info::PROTOCOL_420:
 			case Info::PROTOCOL_419:
 				return Info::PROTOCOL_419;
-			case Info::PROTOCOL_418:	
+			case Info::PROTOCOL_418:
 			    return Info::PROTOCOL_418;
 			case Info::PROTOCOL_417:
 			case Info::PROTOCOL_416:
@@ -457,7 +459,7 @@ class Network {
 				return Info::PROTOCOL_110;
 		}
 	}
-	
+
 	/**
 	 * @param string $address
 	 * @param int    $port
@@ -480,8 +482,8 @@ class Network {
 			$interface->blockAddress($address, $timeout);
 		}
 	}
-	
-	
+
+
 	private function registerPackets110(){
 		$this->packetPool110 = new \SplFixedArray(256);
 		$this->registerPacket110(ProtocolInfo110::CHANGE_DIMENSION_PACKET, ChangeDimensionPacket::class);
@@ -550,7 +552,7 @@ class Network {
 		$this->registerPacket110(ProtocolInfo110::MAP_INFO_REQUEST_PACKET, MapInfoRequestPacket::class);
 		$this->registerPacket110(ProtocolInfo110::SPAWN_EXPERIENCE_ORB_PACKET, SpawnExperienceOrbPacket::class);
 	}
-	
+
 	private function registerPackets120() {
 		$this->packetPool120 = new \SplFixedArray(256);
 		$this->registerPacket120(ProtocolInfo120::SPAWN_EXPERIENCE_ORB_PACKET, SpawnExperienceOrbPacket::class);
@@ -617,12 +619,12 @@ class Network {
 		$this->registerPacket120(ProtocolInfo120::MODAL_FORM_RESPONSE_PACKET, ModalFormResponsePacket::class);
 		$this->registerPacket120(ProtocolInfo120::SERVER_SETTINGS_REQUEST_PACKET, ServerSettingsRequestPacket::class);
 		$this->registerPacket120(ProtocolInfo120::PURCHASE_RECEIPT_PACKET, PurchaseReceiptPacket::class);
-		$this->registerPacket120(ProtocolInfo120::SUB_CLIENT_LOGIN_PACKET, SubClientLoginPacket::class);		
+		$this->registerPacket120(ProtocolInfo120::SUB_CLIENT_LOGIN_PACKET, SubClientLoginPacket::class);
 	$this->registerPacket120(ProtocolInfo120::PLAY_SOUND_PACKET, PlaySoundPacket::class);
 	$this->registerPacket120(ProtocolInfo120::ITEM_FRAME_DROP_ITEM_PACKET, ItemFrameDropItemPacket::class);
 	$this->registerPacket120(ProtocolInfo120::BOSS_EVENT_PACKET, BossEventPacket::class);
 	}
-	
+
 	private function registerPackets310() {
 		$this->packetPool310 = new \SplFixedArray(256);
 		$this->registerPacket310(ProtocolInfo310::SPAWN_EXPERIENCE_ORB_PACKET, SpawnExperienceOrbPacket::class);
@@ -687,16 +689,16 @@ class Network {
 		$this->registerPacket310(ProtocolInfo310::MODAL_FORM_RESPONSE_PACKET, ModalFormResponsePacket::class);
 		$this->registerPacket310(ProtocolInfo310::SERVER_SETTINGS_REQUEST_PACKET, ServerSettingsRequestPacket::class);
 		$this->registerPacket310(ProtocolInfo310::PURCHASE_RECEIPT_PACKET, PurchaseReceiptPacket::class);
-		$this->registerPacket310(ProtocolInfo310::SUB_CLIENT_LOGIN_PACKET, SubClientLoginPacket::class);			
-		$this->registerPacket310(ProtocolInfo310::AVAILABLE_ENTITY_IDENTIFIERS_PACKET, AvailableEntityIdentifiersPacket::class);	
-		$this->registerPacket310(ProtocolInfo310::LEVEL_SOUND_EVENT_PACKET, LevelSoundEventPacket::class);	
-		$this->registerPacket310(ProtocolInfo310::NETWORK_CHUNK_PUBLISHER_UPDATE_PACKET, NetworkChunkPublisherUpdatePacket::class);	
+		$this->registerPacket310(ProtocolInfo310::SUB_CLIENT_LOGIN_PACKET, SubClientLoginPacket::class);
+		$this->registerPacket310(ProtocolInfo310::AVAILABLE_ENTITY_IDENTIFIERS_PACKET, AvailableEntityIdentifiersPacket::class);
+		$this->registerPacket310(ProtocolInfo310::LEVEL_SOUND_EVENT_PACKET, LevelSoundEventPacket::class);
+		$this->registerPacket310(ProtocolInfo310::NETWORK_CHUNK_PUBLISHER_UPDATE_PACKET, NetworkChunkPublisherUpdatePacket::class);
 		$this->registerPacket310(ProtocolInfo310::SPAWN_PARTICLE_EFFECT_PACKET, SpawnParticleEffectPacket::class);
 	$this->registerPacket310(ProtocolInfo310::PLAY_SOUND_PACKET, PlaySoundPacket::class);
 	$this->registerPacket310(ProtocolInfo310::ITEM_FRAME_DROP_ITEM_PACKET, ItemFrameDropItemPacket::class);
 	$this->registerPacket310(ProtocolInfo310::BOSS_EVENT_PACKET, BossEventPacket::class);
 	}
-	
+
 	private function registerPackets331() {
 		$this->packetPool331 = new \SplFixedArray(256);
 		$this->registerPacket331(ProtocolInfo331::SPAWN_EXPERIENCE_ORB_PACKET, SpawnExperienceOrbPacket::class);
@@ -761,10 +763,10 @@ class Network {
 		$this->registerPacket331(ProtocolInfo331::MODAL_FORM_RESPONSE_PACKET, ModalFormResponsePacket::class);
 		$this->registerPacket331(ProtocolInfo331::SERVER_SETTINGS_REQUEST_PACKET, ServerSettingsRequestPacket::class);
 		$this->registerPacket331(ProtocolInfo331::PURCHASE_RECEIPT_PACKET, PurchaseReceiptPacket::class);
-		$this->registerPacket331(ProtocolInfo331::SUB_CLIENT_LOGIN_PACKET, SubClientLoginPacket::class);			
-		$this->registerPacket331(ProtocolInfo331::AVAILABLE_ENTITY_IDENTIFIERS_PACKET, AvailableEntityIdentifiersPacket::class);	
-		$this->registerPacket331(ProtocolInfo331::LEVEL_SOUND_EVENT_PACKET, LevelSoundEventPacket::class);	
-		$this->registerPacket331(ProtocolInfo331::NETWORK_CHUNK_PUBLISHER_UPDATE_PACKET, NetworkChunkPublisherUpdatePacket::class);	
+		$this->registerPacket331(ProtocolInfo331::SUB_CLIENT_LOGIN_PACKET, SubClientLoginPacket::class);
+		$this->registerPacket331(ProtocolInfo331::AVAILABLE_ENTITY_IDENTIFIERS_PACKET, AvailableEntityIdentifiersPacket::class);
+		$this->registerPacket331(ProtocolInfo331::LEVEL_SOUND_EVENT_PACKET, LevelSoundEventPacket::class);
+		$this->registerPacket331(ProtocolInfo331::NETWORK_CHUNK_PUBLISHER_UPDATE_PACKET, NetworkChunkPublisherUpdatePacket::class);
 		$this->registerPacket331(ProtocolInfo331::SPAWN_PARTICLE_EFFECT_PACKET, SpawnParticleEffectPacket::class);
     	$this->registerPacket331(ProtocolInfo331::PLAY_SOUND_PACKET, PlaySoundPacket::class);
     	$this->registerPacket331(ProtocolInfo331::ITEM_FRAME_DROP_ITEM_PACKET, ItemFrameDropItemPacket::class);

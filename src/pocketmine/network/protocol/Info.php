@@ -96,8 +96,8 @@ interface Info{
 	const PROTOCOL_407 = 407; // 1.16.0.64
 	const PROTOCOL_408 = 408; // 1.16.20.53, 1.16.20.54, 1.16.20
 	const PROTOCOL_409 = 409; // 1.16.100.50
-    const PROTOCOL_410 = 410; // 1.16.100.51
-    const PROTOCOL_411 = 411; // 1.16.100.52
+  const PROTOCOL_410 = 410; // 1.16.100.51
+  const PROTOCOL_411 = 411; // 1.16.100.52
 	const PROTOCOL_412 = 412; // 1.16.100.53
 	const PROTOCOL_413 = 413; // 1.16.100.54
 	const PROTOCOL_414 = 414; // 1.16.100.55
@@ -138,7 +138,7 @@ interface Info{
 	const PROTOCOL_477 = 477; // 1.18.10.22
 	const PROTOCOL_479 = 479; // 1.18.10.24
 	const PROTOCOL_485 = 485; // 1.18.10.26
-	const PROTOCOL_486 = 486;
+	const PROTOCOL_486 = 486; // 1.18.10.28
 
 	/** OUTDATED (supporting will be removed with next release, may didn't work properly)*/
 	const PROTOCOL_120 = 120; // 1.2.0.xx (beta)

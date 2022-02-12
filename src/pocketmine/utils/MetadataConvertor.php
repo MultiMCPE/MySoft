@@ -8,7 +8,7 @@ use pocketmine\network\protocol\Info;
 class MetadataConvertor {
 
 	private static $initialMeta = [];
-	
+
 	private static $diffEntityFlags110 = [
 		'DATA_FLAG_RESTING_BAT' => 22,
 		'DATA_FLAG_ANIMAL_SIT' => 23,
@@ -20,7 +20,7 @@ class MetadataConvertor {
 		'DATA_FLAG_SHAVED_SHIP' => 29,
 		'DATA_FLAG_FALL_FLYING' => 30,
 		'DATA_FLAG_ELDER_GUARDIAN' => 31,
-		'DATA_FLAG_MOVING' => 32,		
+		'DATA_FLAG_MOVING' => 32,
 		'DATA_FLAG_NOT_IN_WATER' => 33,
 		'DATA_FLAG_CHESTED_MOUNT' => 34,
 		'DATA_FLAG_STACKABLE' => 35,
@@ -113,7 +113,7 @@ class MetadataConvertor {
 	private static $entityFlags221 = [];
 	private static $entityFlags290 = [];
 	private static $entityFlags340 = [];
-	
+
 	private static $diffEntityMetaIds110 = [
 		'DATA_MAX_AIR' => 43,
 	];
@@ -146,7 +146,7 @@ class MetadataConvertor {
 		'DATA_SEAT_RIDER_OFFSET' => 56,
 		'DATA_POSE_INDEX' => 78,
 	];
-	
+
 	private static $diffEntityMetaIds340 = [
 		'DATA_PLAYER_FLAGS' => 26,
 		'DATA_PLAYER_BED_POSITION' => 28,
@@ -160,7 +160,7 @@ class MetadataConvertor {
 		'DATA_SEAT_RIDER_OFFSET' => 56,
 		'DATA_POSE_INDEX' => 78,
 	];
-	
+
 	private static $diffEntityMetaIds354 = [
 		'DATA_PLAYER_FLAGS' => 26,
 		'DATA_PLAYER_BED_POSITION' => 28,
@@ -174,7 +174,7 @@ class MetadataConvertor {
 		'DATA_SEAT_RIDER_OFFSET' => 57,
 		'DATA_POSE_INDEX' => 79,
 	];
-	
+
 	private static $diffEntityMetaIds360 = [
 		'DATA_PLAYER_FLAGS' => 26,
 		'DATA_PLAYER_BED_POSITION' => 28,
@@ -188,7 +188,7 @@ class MetadataConvertor {
 		'DATA_SEAT_RIDER_OFFSET' => 56,
 		'DATA_POSE_INDEX' => 78,
 	];
-	
+
 	private static $entityMetaIds110 = [];
 	private static $entityMetaIds120 = [];
 	private static $entityMetaIds220 = [];
@@ -212,61 +212,61 @@ class MetadataConvertor {
 				self::$entityFlags120[self::$initialMeta[$key]] = $value;
 			}
 		}
-		
+
 		foreach (self::$diffEntityFlags221 as $key => $value) {
 			if (isset(self::$initialMeta[$key])) {
 				self::$entityFlags221[self::$initialMeta[$key]] = $value;
 			}
 		}
-		
+
 		foreach (self::$diffEntityFlags290 as $key => $value) {
 			if (isset(self::$initialMeta[$key])) {
 				self::$entityFlags290[self::$initialMeta[$key]] = $value;
 			}
 		}
-		
+
 		foreach (self::$diffEntityFlags340 as $key => $value) {
 			if (isset(self::$initialMeta[$key])) {
 				self::$entityFlags340[self::$initialMeta[$key]] = $value;
 			}
 		}
-		
+
 		foreach (self::$diffEntityMetaIds110 as $key => $value) {
 			if (isset(self::$initialMeta[$key])) {
 				self::$entityMetaIds110[self::$initialMeta[$key]] = $value;
 			}
 		}
-		
+
 		foreach (self::$diffEntityMetaIds120 as $key => $value) {
 			if (isset(self::$initialMeta[$key])) {
 				self::$entityMetaIds120[self::$initialMeta[$key]] = $value;
 			}
 		}
-		
+
 		foreach (self::$diffEntityMetaIds220 as $key => $value) {
 			if (isset(self::$initialMeta[$key])) {
 				self::$entityMetaIds220[self::$initialMeta[$key]] = $value;
 			}
 		}
-		
+
 		foreach (self::$diffEntityMetaIds221 as $key => $value) {
 			if (isset(self::$initialMeta[$key])) {
 				self::$entityMetaIds221[self::$initialMeta[$key]] = $value;
 			}
 		}
-		
+
 		foreach (self::$diffEntityMetaIds340 as $key => $value) {
 			if (isset(self::$initialMeta[$key])) {
 				self::$entityMetaIds340[self::$initialMeta[$key]] = $value;
 			}
 		}
-		
+
 		foreach (self::$diffEntityMetaIds354 as $key => $value) {
 			if (isset(self::$initialMeta[$key])) {
 				self::$entityMetaIds354[self::$initialMeta[$key]] = $value;
 			}
 		}
-		
+
 		foreach (self::$diffEntityMetaIds360 as $key => $value) {
 			if (isset(self::$initialMeta[$key])) {
 				self::$entityMetaIds360[self::$initialMeta[$key]] = $value;
@@ -282,6 +282,7 @@ class MetadataConvertor {
 
 	private static function updateMetaIds($meta, $protocol) {
 		switch ($protocol) {
+			case Info::PROTOCOL_486:
 			case Info::PROTOCOL_475:
             case Info::PROTOCOL_471:
             case Info::PROTOCOL_465:
@@ -340,7 +341,7 @@ class MetadataConvertor {
 				$protocolMeta = self::$entityMetaIds220;
 				break;
 			case Info::PROTOCOL_120:
-			case Info::PROTOCOL_200:			
+			case Info::PROTOCOL_200:
 				$protocolMeta = self::$entityMetaIds120;
 				break;
 			case Info::PROTOCOL_110:
@@ -365,6 +366,7 @@ class MetadataConvertor {
 			return $meta;
 		}
 		switch ($protocol) {
+			case Info::PROTOCOL_486:
 			case Info::PROTOCOL_475:
             case Info::PROTOCOL_471:
             case Info::PROTOCOL_465:
@@ -433,7 +435,7 @@ class MetadataConvertor {
 			default:
 				return $meta;
 		}
-		
+
 		$flags = strrev(decbin($meta[Entity::DATA_FLAGS][1]));
 		$flagsLength = strlen($flags);
 		for ($i = 0; $i < $flagsLength; $i++) {

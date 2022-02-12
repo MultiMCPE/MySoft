@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
@@ -39,17 +39,17 @@ abstract class DataPacket extends BinaryStream{
 
 	public $isEncoded = false;
 	private $channel = 0;
-	
+
 	protected static $packetsIds = [];
 
 	public function pid(){
 		return $this::NETWORK_ID;
 	}
-	
+
 	public function pname(){
 		return $this::PACKET_NAME;
 	}
-	
+
 	/**
 	 * @deprecated This adds extra overhead on the network, so its usage is now discouraged. It was a test for the viability of this.
 	 */
@@ -82,7 +82,7 @@ abstract class DataPacket extends BinaryStream{
 
 		return $data;
 	}
-	
+
 	public static function initPackets() {
 		$oClass = new \ReflectionClass ('pocketmine\network\protocol\Info110');
 		self::$packetsIds[Info::PROTOCOL_110] = $oClass->getConstants();
@@ -120,24 +120,25 @@ abstract class DataPacket extends BinaryStream{
 		self::$packetsIds[Info::PROTOCOL_390] = $oClass->getConstants();
 		self::$packetsIds[Info::PROTOCOL_392] = $oClass->getConstants();
 		self::$packetsIds[Info::PROTOCOL_393] = $oClass->getConstants();
-		self::$packetsIds[Info::PROTOCOL_400] = $oClass->getConstants();	
-		self::$packetsIds[Info::PROTOCOL_401] = $oClass->getConstants();	
-		self::$packetsIds[Info::PROTOCOL_406] = $oClass->getConstants();		
-		self::$packetsIds[Info::PROTOCOL_407] = $oClass->getConstants();		
+		self::$packetsIds[Info::PROTOCOL_400] = $oClass->getConstants();
+		self::$packetsIds[Info::PROTOCOL_401] = $oClass->getConstants();
+		self::$packetsIds[Info::PROTOCOL_406] = $oClass->getConstants();
+		self::$packetsIds[Info::PROTOCOL_407] = $oClass->getConstants();
 		self::$packetsIds[Info::PROTOCOL_415] = $oClass->getConstants();
 		self::$packetsIds[Info::PROTOCOL_418] = $oClass->getConstants();
 		self::$packetsIds[Info::PROTOCOL_419] = $oClass->getConstants();
 		self::$packetsIds[Info::PROTOCOL_422] = $oClass->getConstants();
 		self::$packetsIds[Info::PROTOCOL_425] = $oClass->getConstants();
-		self::$packetsIds[Info::PROTOCOL_428] = $oClass->getConstants();	
-		self::$packetsIds[Info::PROTOCOL_431] = $oClass->getConstants();	
-		self::$packetsIds[Info::PROTOCOL_440] = $oClass->getConstants();	
-		self::$packetsIds[Info::PROTOCOL_448] = $oClass->getConstants();	
-		self::$packetsIds[Info::PROTOCOL_455] = $oClass->getConstants();	
-		self::$packetsIds[Info::PROTOCOL_459] = $oClass->getConstants();	
-		self::$packetsIds[Info::PROTOCOL_465] = $oClass->getConstants();	
-		self::$packetsIds[Info::PROTOCOL_471] = $oClass->getConstants();	
+		self::$packetsIds[Info::PROTOCOL_428] = $oClass->getConstants();
+		self::$packetsIds[Info::PROTOCOL_431] = $oClass->getConstants();
+		self::$packetsIds[Info::PROTOCOL_440] = $oClass->getConstants();
+		self::$packetsIds[Info::PROTOCOL_448] = $oClass->getConstants();
+		self::$packetsIds[Info::PROTOCOL_455] = $oClass->getConstants();
+		self::$packetsIds[Info::PROTOCOL_459] = $oClass->getConstants();
+		self::$packetsIds[Info::PROTOCOL_465] = $oClass->getConstants();
+		self::$packetsIds[Info::PROTOCOL_471] = $oClass->getConstants();
 		self::$packetsIds[Info::PROTOCOL_475] = $oClass->getConstants();
+		self::$packetsIds[Info::PROTOCOL_486] = $oClass->getConstants();
 	}
-	
+
 }
