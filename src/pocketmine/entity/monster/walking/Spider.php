@@ -14,7 +14,7 @@ use pocketmine\math\Vector3;
 use pocketmine\Player;
 
 class Spider extends WalkingMonster{
-	
+
 	const NETWORK_ID = 35;
 
 	public $width = 1.3;
@@ -52,12 +52,12 @@ class Spider extends WalkingMonster{
 			return null;
 		}
 
-		if($this->isKnockback()){
+		/*if($this->isKnockback()){
 			$this->move($this->motionX * $tickDiff, $this->motionY, $this->motionZ * $tickDiff);
 			$this->motionY -= 0.15 * $tickDiff;
 			$this->updateMovement();
 			return null;
-		}
+		}*/
 
 		$before = $this->baseTarget;
 		$this->checkTarget();
@@ -106,7 +106,7 @@ class Spider extends WalkingMonster{
 		$this->move($dx, $dy, $dz);
 		$be = new Vector2($this->x + $dx, $this->z + $dz);
 		$af = new Vector2($this->x, $this->z);
-	
+
 
 		if($be->x != $af->x || $be->y != $af->y){
 			$x = 0;

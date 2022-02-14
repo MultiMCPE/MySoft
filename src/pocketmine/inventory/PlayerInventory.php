@@ -37,7 +37,7 @@ use pocketmine\Server;
 use pocketmine\network\protocol\Info;
 
 class PlayerInventory extends BaseInventory{
-	
+
 	const OFFHAND_ARMOR_SLOT_ID = 4;
 
 	protected $itemInHandIndex = 0;
@@ -55,7 +55,7 @@ class PlayerInventory extends BaseInventory{
 	public function getItemInOffHand(){
 	    return $this->getItem($this->getSize() + 4);
 	}
-	
+
 	public function setItemInOffHand(Item $item){
 	    return $this->setItem($this->getSize() + 4, $item);
 	}
@@ -67,9 +67,9 @@ class PlayerInventory extends BaseInventory{
 	public function setSize($size){
 		parent::setSize($size + 5);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param int $index
 	 * @return Item
 	 */
@@ -100,7 +100,7 @@ class PlayerInventory extends BaseInventory{
 	public function getHeldItemIndex(){
 		return $this->itemInHandIndex;
 	}
-	
+
 	/**
 	 * @impportant For win10 inventory only
 	 * @param int $index
@@ -114,7 +114,7 @@ class PlayerInventory extends BaseInventory{
 	public function setHeldItemIndex($index, $isNeedSendToHolder = true){
 		if($index >= 0 and $index < $this->getHotbarSize()){
 			$this->itemInHandIndex = $index;
-			
+
 			if ($isNeedSendToHolder === true && $this->getHolder() instanceof Player) {
 				$this->sendHeldItem($this->getHolder());
 			}
@@ -363,14 +363,14 @@ class PlayerInventory extends BaseInventory{
 				$pk2->eid = $this->getHolder()->getId();
 				$pk2->windowid = ContainerSetContentPacket::SPECIAL_ARMOR;
 				$pk2->slots = $armor;
-				$player->dataPacket($pk2);				
+				$player->dataPacket($pk2);
 			}else{
 				$player->dataPacket($pk);
 			}
 		}
 		$this->sendOffHandContents($target);
 	}
-	
+
 	private function sendOffHandContents($target) {
 		$pk = new MobEquipmentPacket();
 		$pk->eid = $this->getHolder()->getId();
@@ -421,12 +421,12 @@ class PlayerInventory extends BaseInventory{
 				return;
 			}
 		}
-		
+
 		if ($index - $this->getSize() == self::OFFHAND_ARMOR_SLOT_ID) {
 			$this->sendOffHandContents($target);
 			return;
 		}
-		
+
 		$armor = $this->getArmorContents();
 
 		$pk = new MobArmorEquipmentPacket();
@@ -445,7 +445,7 @@ class PlayerInventory extends BaseInventory{
 			}
 		}
 	}
-	
+
 	/**
 	 * @param Player|Player[] $target
 	 */
@@ -492,7 +492,7 @@ class PlayerInventory extends BaseInventory{
 	public function getHolder(){
 		return parent::getHolder();
 	}
-	
+
 	public function removeItemWithCheckOffHand($searchItem) {
 		$offhandSlotId = $this->getSize() + self::OFFHAND_ARMOR_SLOT_ID;
 		$item = $this->getItem($offhandSlotId);
@@ -507,7 +507,7 @@ class PlayerInventory extends BaseInventory{
 		}
 		parent::removeItem($searchItem);
 	}
-	
+
 	public function openSelfInventory() {
 		$pk = new ContainerOpenPacket();
 		$pk->windowid = ContainerSetContentPacket::SPECIAL_INVENTORY;
@@ -517,7 +517,7 @@ class PlayerInventory extends BaseInventory{
 		$pk->z = $this->getHolder()->getZ();
 		$this->getHolder()->dataPacket($pk);
 	}
-	
+
 	public function forceSetSlot($index, Item $item) {
 		$this->slots[$index] = clone $item;
 	}

@@ -1116,6 +1116,9 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 		if($this->connected === false){
 			return false;
 		}
+		if($packet->pname() != "BATCH_PACKET" and $packet->pname() != "MOVE_ENTITY_PACKET"){
+			//print_r($packet->pname() . "\n");
+		}
 
 		$timings = Timings::getSendDataPacketTimings($packet);
 		$timings->startTiming();
@@ -1874,6 +1877,11 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 		    $timings->stopTiming();
 			return;
 		}
+
+		/*$alloed = ["INTERACT_PACKET", "MOVE_PLAYER_PACKET", "MOVE_ENTITY_PACKET"];
+		if(!in_array($packet->pname(), $beforeLoginAvailablePackets) and !in_array($packet->pname(), $alloed)){
+			print_r($packet);
+		}*/
 
 		switch($packet->pname()){
             case 'ADVENTURE_SETTINGS_PACKET':

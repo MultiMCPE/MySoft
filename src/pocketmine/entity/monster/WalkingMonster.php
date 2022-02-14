@@ -42,7 +42,7 @@ abstract class WalkingMonster extends WalkingEntity implements Monster{
 		}
 		return $this->maxDamage[$difficulty];
 	}
-	
+
 	public function setDamage($damage, $difficulty = null){
 		if(is_array($damage)){
 			for($i = 0; $i < 4; $i++){
@@ -161,7 +161,7 @@ abstract class WalkingMonster extends WalkingEntity implements Monster{
 				$this->setDataProperty(self::DATA_AIR, self::DATA_TYPE_SHORT, 300);
 			}
 		}
-		
+
 		return $hasUpdate;
 	}
 

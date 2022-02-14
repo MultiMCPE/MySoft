@@ -32,9 +32,9 @@ use pocketmine\event\player\PlayerBucketFillEvent;
 use pocketmine\level\Level;
 use pocketmine\Player;
 
-class Bucket extends Item{
+class BucketWater extends Item{
 
-	protected $itemIdBucket = self::BUCKET;
+	protected $itemIdBucket = self::BUCKETWATER;
 	protected $targetBlock = Block::AIR;
 
 	protected static $bucketByTarget = [
@@ -45,18 +45,8 @@ class Bucket extends Item{
 		//Item::STILL_WATER => Item::WATER_BUCKET
 	];
 
-	public function getClassName($meta) {
-		static $names = [
-			0 => "Bucket",
-			8 => "Water Bucket",
-			10 => "Lava Bucket",
-			1 => "Milk Bucket",
-		];
-		return $names[$meta & 0x0f];
-	}
-
 	public function __construct($meta = 0, $count = 1){
-		parent::__construct($this->itemIdBucket, $meta, $count, $this->getClassName($meta));
+		parent::__construct($this->itemIdBucket, 8, $count, "BucketWater");
 	}
 
 	public function getMaxStackSize(){
@@ -81,7 +71,6 @@ class Bucket extends Item{
 				if($player->getInventory()->getItemInHand()->getDamage() == 0){
 				//$result = Item::get(self::$bucketByTarget[$target->getId()], 0, 1);;
 				$result = Item::get(Item::BUCKET, 8, 1);
-				//print_r($result);
 				$player->getServer()->getPluginManager()->callEvent($ev = new PlayerBucketFillEvent($player, $block, $face, $this, $result));
 				if(!$ev->isCancelled()){
 					$player->getLevel()->setBlock($target, new Air(), true, true);

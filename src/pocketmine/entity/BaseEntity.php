@@ -172,10 +172,6 @@ abstract class BaseEntity extends Creature{
 		}
 	}
 
-	public function knockBack(Entity $attacker, $damage, $x, $z, $base = 0.4){
-
-	}
-
 	public function entityBaseTick($tickDiff = 1){
 		//Timings::$timerEntityBaseTick->startTiming();
 
@@ -212,7 +208,7 @@ abstract class BaseEntity extends Creature{
 	}
 
 	public function move($dx, $dy, $dz){
-		//Timings::$entityMoveTimer->startTiming();
+		Timings::$entityMoveTimer->startTiming();
 		$list = $this->level->getCollisionCubes($this, $this->level->getServer()->getTick() > 1 ? $this->boundingBox->getOffsetBoundingBox($dx, $dy, $dz) : $this->boundingBox->addCoord($dx, $dy, $dz));
 		if($this->isWallCheck()){
 			foreach($list as $bb){
@@ -231,7 +227,7 @@ abstract class BaseEntity extends Creature{
 		$this->boundingBox->offset(0, $dy, 0);
 		$this->setComponents($this->x + $dx, $this->y + $dy, $this->z + $dz);
 		$this->checkChunks();
-		//Timings::$entityMoveTimer->stopTiming();
+		Timings::$entityMoveTimer->stopTiming();
 		return true;
 	}
 

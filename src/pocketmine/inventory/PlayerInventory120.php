@@ -31,7 +31,7 @@ class PlayerInventory120 extends PlayerInventory {
 	const CRAFT_INDEX_8 = -11;
 	const CRAFT_RESULT_INDEX = -12;
 	const QUICK_CRAFT_INDEX_OFFSET = -100;
-	
+
 	/** @var Item */
 	protected $cursor;
 	/** @var Item[] */
@@ -42,7 +42,7 @@ class PlayerInventory120 extends PlayerInventory {
 	protected $quickCraftSlots = []; // reason: bug with quick craft
 	/** @var boolean */
 	protected $isQuickCraftEnabled = false;
-	
+
 	public function __construct(Human $player) {
 		parent::__construct($player);
 		$this->cursor = Item::get(Item::AIR, 0, 0);
@@ -50,15 +50,15 @@ class PlayerInventory120 extends PlayerInventory {
 			$this->craftSlots[$i] = Item::get(Item::AIR, 0, 0);
 		}
 	}
-	
+
 	public function getItemInOffHand(){
 	    return $this->getItem($this->getSize() + 4);
 	}
-	
+
 	public function setItemInOffHand(Item $item){
 	    return $this->setItem($this->getSize() + 4, $item);
 	}
-	
+
 	public function setItem($index, Item $item, $sendPacket = true) {
 		if ($index >= 0) {
 			return parent::setItem($index, $item, $sendPacket);
@@ -97,7 +97,7 @@ class PlayerInventory120 extends PlayerInventory {
 		$this->sendArmorContents($this->getHolder());
 		return true;
 	}
-	
+
 	public function getItem($index) {
 		if ($index < 0) {
 			switch ($index) {
@@ -128,7 +128,7 @@ class PlayerInventory120 extends PlayerInventory {
 			return parent::getItem($index);
 		}
 	}
-	
+
 	public function setHotbarSlotIndex($index, $slot) {
 		if ($index == $slot || $slot < 0) {
 			return;
@@ -137,7 +137,7 @@ class PlayerInventory120 extends PlayerInventory {
 		$this->setItem($index, $this->getItem($slot));
 		$this->setItem($slot, $tmp);
 	}
-	
+
 	public function sendSlot($index, $target) {
 		$pk = new InventorySlotPacket();
 		$pk->containerId = Protocol120::CONTAINER_ID_INVENTORY;
@@ -145,7 +145,7 @@ class PlayerInventory120 extends PlayerInventory {
 		$pk->item = $this->getItem($index);
 		$this->holder->dataPacket($pk);
 	}
-	
+
 	public function sendContents($target) {
 		$pk = new InventoryContentPacket();
 		$pk->inventoryID = Protocol120::CONTAINER_ID_INVENTORY;
@@ -159,7 +159,7 @@ class PlayerInventory120 extends PlayerInventory {
 		$this->holder->dataPacket($pk);
 		$this->sendCursor();
 	}
-	
+
 	public function sendCursor() {
 		$pk = new InventorySlotPacket();
 		$pk->containerId = Protocol120::CONTAINER_ID_CURSOR_SELECTED;
@@ -167,9 +167,9 @@ class PlayerInventory120 extends PlayerInventory {
 		$pk->item = $this->cursor;
 		$this->holder->dataPacket($pk);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param integer $index
 	 * @param Player[] $target
 	 */
@@ -177,7 +177,7 @@ class PlayerInventory120 extends PlayerInventory {
 		if ($target instanceof Player) {
 			$target = [$target];
 		}
-		
+
 		if ($index - $this->getSize() == self::OFFHAND_ARMOR_SLOT_ID) {
 			$this->sendOffHandContents($target);
 		} else {
@@ -225,9 +225,9 @@ class PlayerInventory120 extends PlayerInventory {
 		}
 		$this->sendOffHandContents($target);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param Player[] $target
 	 */
 	private function sendOffHandContents($targets) {
@@ -248,26 +248,26 @@ class PlayerInventory120 extends PlayerInventory {
 			}
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return Item[]
 	 */
 	public function getCraftContents() {
 		return $this->craftSlots;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param integer $slotIndex
 	 * @return boolean
 	 */
 	protected function isArmorSlot($slotIndex) {
 		return $slotIndex >= $this->getSize();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param integer $slotIndex
 	 * @return boolean
 	 */
@@ -299,7 +299,7 @@ class PlayerInventory120 extends PlayerInventory {
 		}
 		return true;
 	}
-	
+
 	public function close(Player $who) {
 		parent::close($who);
 		$isChanged = false;
@@ -316,12 +316,12 @@ class PlayerInventory120 extends PlayerInventory {
 				$isChanged = true;
 			}
 		}
-		$this->setQuickCraftMode(false);	
+		$this->setQuickCraftMode(false);
 		if ($isChanged) {
 			$this->sendContents($this->holder);
 		}
 	}
-	
+
 	public function clearAll() {
 		parent::clearAll();
 		for ($index = self::CRAFT_INDEX_0; $index >= self::CRAFT_INDEX_8; $index--) {
@@ -329,7 +329,7 @@ class PlayerInventory120 extends PlayerInventory {
 		}
 		$this->cursor = null;
 	}
-	
+
 	public function __toString() {
 		$result = "";
 		foreach ($this->getContents() as $index => $item) {
@@ -337,20 +337,20 @@ class PlayerInventory120 extends PlayerInventory {
 		}
 		return $result;
 	}
-	
+
 	public function setQuickCraftMode($value) {
 		$this->isQuickCraftEnabled = $value;
 		$this->quickCraftSlots = [];
 	}
-	
+
 	public function isQuickCraftEnabled() {
 		return $this->isQuickCraftEnabled;
 	}
-	
+
 	public function getNextFreeQuickCraftSlot() {
 		return self::QUICK_CRAFT_INDEX_OFFSET - count($this->quickCraftSlots);
 	}
-	
+
 	public function getQuckCraftContents() {
 		return $this->quickCraftSlots;
 	}

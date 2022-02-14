@@ -14,9 +14,11 @@ use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\IntTag;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\item\Item;
+use pocketmine\network\protocol\LevelSoundEventPacket;
+use pocketmine\Server;
 
 class Creeper extends WalkingMonster implements Explosive{
-	
+
 	const NETWORK_ID = 33;
 
 	public $width = 0.72;
@@ -46,14 +48,14 @@ class Creeper extends WalkingMonster implements Explosive{
 	}
 
 	public function explode(){
-		$this->server->getPluginManager()->callEvent($ev = new ExplosionPrimeEvent($this, 0.1));
+		$this->server->getPluginManager()->callEvent($ev = new ExplosionPrimeEvent($this, 1.9));
 
 		if(!$ev->isCancelled()){
-			$explosion = new Explosion($this, $ev->getForce(), $this);
+			$explosion = new Explosion($this, 1.9, $this);
 			if($ev->isBlockBreaking()){
-				$explosion->explodeB();
+				$explosion->explode();
 			}
-			$explosion->explodeB();
+			$explosion->explode();
 			$this->close();
 		}
 	}
@@ -70,8 +72,8 @@ class Creeper extends WalkingMonster implements Explosive{
 
             if($this->baseTarget instanceof Creature && $this->baseTarget->distanceSquared($this) <= 4.5){
                 $this->bombTime += $tickDiff;
-                if($this->bombTime >= 64){
-                    $this->explodeB();
+                if($this->bombTime >= 40){
+                    $this->explode();
                     return false;
                 }
             } else {
@@ -92,10 +94,6 @@ class Creeper extends WalkingMonster implements Explosive{
         return parent::onUpdate($currentTick);
     }
 
-	public function updateMove(){
-		return null;
-	}
-
 	public function attackEntity(Entity $player){
 
 	}
@@ -111,7 +109,7 @@ class Creeper extends WalkingMonster implements Explosive{
 					return [Item::get(Item::REDSTONE_DUST, 0, 1)];
 			}
 		}
-		
+
 		return [];
 	}
 

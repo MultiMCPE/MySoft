@@ -12,7 +12,7 @@ use pocketmine\block\Water;
 
 abstract class WalkingEntity extends BaseEntity {
 
-	protected $agrDistance = 16;
+	protected $agrDistance = 25;
 
 	protected function checkTarget($update = false) {
 		if ($this->isKnockback() && !$update && $this->baseTarget instanceof Player && $this->baseTarge->isAlive() && sqrt($this->distanceSquared($player)) < $this->agrDistance) {
@@ -24,14 +24,14 @@ abstract class WalkingEntity extends BaseEntity {
 		if ($this instanceof Monster && !$this->isFriendly()) {
 			$near = PHP_INT_MAX;
 			foreach ($this->getLevel()->getServer()->getOnlinePlayers() as $player) {
-				if(!$player->isCreative()){
+				if((!$player->isCreative()) and (!$player->isSpectator())){
 				    if ($player->isAlive()) {
 					    $distance = sqrt($this->distanceSquared($player));
-						
+
 					    if ($distance >= $near) {
 						    continue;
 		                }
-						
+
 					    $target = $player;
 					    $near = $distance;
 				    }
@@ -45,19 +45,19 @@ abstract class WalkingEntity extends BaseEntity {
 			}
 		}
 
-		if ($this->moveTime <= 0 || !($this->baseTarget instanceof Vector3)) {
+		if ($this->moveTime <= 0) {
 			$i = 0;
 			while($i < 10) {
 				$x = mt_rand(20, 100);
 				$z = mt_rand(20, 100);
-				$this->moveTime = mt_rand(300, 1200);
+				$this->moveTime = mt_rand(0, 100);
 				$this->baseTarget = new Vector3($this->getX() + (mt_rand(0, 1) ? $x : -$x), $this->getY(), $this->getZ() + (mt_rand(0, 1) ? $z : -$z));
 				$y =  $this->level->getHighestBlockAt($this->baseTarget->getX(), $this->baseTarget->getZ());
 				$this->baseTarget->y = $y;
 				$block = $this->level->getBlock($this->baseTarget);
-				if(!($block instanceof Water)){
-					break;
+				if(($block instanceof Water)){
 				}
+				break;
 				$i++;
 			}
 		}
@@ -67,13 +67,21 @@ abstract class WalkingEntity extends BaseEntity {
 		if (!$this->isMovement()) {
 			return null;
 		}
-		
+		//if($rand > 90){
+
+		/*$this->motionX = $this->getSpeed() * 0.15 * ($x / $diff);
+		$this->motionZ = $this->getSpeed() * 0.15 * ($z / $diff);
+		$this->checkTarget(true);*/
+
 
 		if ($this->isKnockback() || $this->sprintTime > 0) {
 			$target = null;
-			if($this->sprintTime > 0){
-				$this->yaw = -atan2($this->motionX, $this->motionZ) * 180 / M_PI;
-			}
+				//$this->yaw = -atan2($this->motionX, $this->motionZ) * 180 / M_PI;
+				//$motion = new Vector3($this->baseTarget);
+				//$motion->x = $motion->x + 1;
+				//$motion->y = $motion->y + 1;
+				//$motion->z = $motion->z + 1;
+				//$this->setMotion($motion);
 		} else {
 			$this->checkTarget();
 			if ($this->baseTarget instanceof Vector3) {
@@ -101,9 +109,11 @@ abstract class WalkingEntity extends BaseEntity {
 		$isJump = false;
 		$dx = $this->motionX;
 		$dz = $this->motionZ;
+		$dy = $this->motionZ;
 
 		$newX = Math::floorFloat($this->x + $dx);
 		$newZ = Math::floorFloat($this->z + $dz);
+		$newy = Math::floorFloat($this->y + $dy);
 
 		$block = $this->level->getBlock(new Vector3($newX, Math::floorFloat($this->y), $newZ));
 		if (!($block instanceof Air) && !($block instanceof Liquid) && !$block->canBeFlowedInto()) {
@@ -134,7 +144,7 @@ abstract class WalkingEntity extends BaseEntity {
 		$this->move($dx, $dy, $dz);
 		$this->updateMovement();
 		return $target;
-		
+
 	}
 
 }

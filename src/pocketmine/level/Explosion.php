@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
@@ -186,7 +186,10 @@ class Explosion{
 				$tnt->spawnToAll();
 			}elseif(mt_rand(0, 100) < $yield){
 				foreach($block->getDrops($air) as $drop){
-					$this->level->dropItem($block->add(0.5, 0.5, 0.5), Item::get(...$drop));
+					$chance = mt_rand(0, 100);
+					if($chance > 10){
+						$this->level->dropItem($block->add(0.5, 0.5, 0.5), Item::get(...$drop));
+					}
 				}
 			}
 			$this->level->setBlock(new Vector3($block->x, $block->y, $block->z), new Air());
@@ -198,7 +201,7 @@ class Explosion{
 		$pk->z = $this->source->z;
 		$pk->radius = $this->size;
 		$pk->records = $send;
-		$this->level->addParticle(new HugeExplodeParticle(new Vector3($this->source->x,  $this->source->y, $this->source->z)));	
+		$this->level->addParticle(new HugeExplodeParticle(new Vector3($this->source->x,  $this->source->y, $this->source->z)));
 		$pk1 = new LevelSoundEventPacket();
 		$pk1->eventId = LevelSoundEventPacket::SOUND_EXPLODE;
 		$pk1->x = $this->source->x;
@@ -207,7 +210,7 @@ class Explosion{
 		$pk1->blockId = -1;
 		$pk1->entityType = 1;
 		Server::getInstance()->batchPackets($this->level->getUsingChunk($source->x >> 4, $source->z >> 4), [$pk, $pk1]);
-		
+
 		return true;
 	}
 
@@ -227,8 +230,8 @@ class Explosion{
 				$ev = new EntityDamageEvent($entity, EntityDamageEvent::CAUSE_BLOCK_EXPLOSION, $damage);
 			}
 
-			$entity->attack($ev->getFinalDamage(), $ev);
 			$entity->setMotion($motion->multiply($impact));
+			$entity->attack($ev->getFinalDamage(), $ev);
 		}
 	}
 }
