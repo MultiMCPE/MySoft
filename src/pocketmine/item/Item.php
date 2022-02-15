@@ -400,7 +400,7 @@ class Item{
 	const NEWVERSION_GOLDEN_PICKAXE = 324;
 	const NEWVERSION_GOLDEN_AXE = 325;
 	const WATER_BUCKET = 326;
-	const NEWVERSION_FEATHER = 327;
+	const LAVA_BUCKET = 327;
 	const NEWVERSION_GUNPOWDER = 328;
 	const NEWVERSION_WOODEN_HOE = 329;
 	const NEWVERSION_STONE_HOE = 330;
@@ -1572,6 +1572,7 @@ class Item{
 			self::$list[self::FISHING_ROD] = FishingRod::class;
 			self::$list[self::BUCKET] = Bucket::class;
 			self::$list[self::WATER_BUCKET] = WaterBucket::class;
+			self::$list[self::LAVA_BUCKET] = LavaBucket::class;
 			self::$list[self::IRON_DOOR] = IronDoor::class;
 			self::$list[self::CAKE] = Cake::class;
 			self::$list[self::BED] = Bed::class;
@@ -1786,8 +1787,9 @@ class Item{
 		self::addCreativeItem110(Item::get(Item::BUCKET, 1));
 		self::addCreativeItem110(Item::get(Item::BUCKET, 8));
 		self::addCreativeItem110(Item::get(Item::BUCKET, 10));
-		self::addCreativeItem(Item::get(Item::WATER_BUCKET, 0));
 		self::addCreativeItem(Item::get(Item::BUCKET, 0));
+		self::addCreativeItem(Item::get(Item::WATER_BUCKET, 0));
+		self::addCreativeItem(Item::get(Item::LAVA_BUCKET, 0));
 
 		self::addCreativeItem(Item::get(Item::STONE_BRICKS, 0), self::CREATIVE_GROUP_STONEBRICK);
 		self::addCreativeItem(Item::get(Item::STONE_BRICKS, 1), self::CREATIVE_GROUP_STONEBRICK);
