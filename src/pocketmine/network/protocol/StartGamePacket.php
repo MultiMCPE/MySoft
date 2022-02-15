@@ -16,7 +16,7 @@ use pocketmine\item\Item;
 class StartGamePacket extends PEPacket{
 	const NETWORK_ID = Info::START_GAME_PACKET;
 	const PACKET_NAME = "START_GAME_PACKET";
-	
+
 	const BROADCAST_SETTINGS_NO_MULTI_PLAY = 0;
 	const BROADCAST_SETTINGS_INVITE_ONLY = 1;
 	const BROADCAST_SETTINGS_FRIENDS_ONLY = 2;
@@ -33,18 +33,18 @@ class StartGamePacket extends PEPacket{
 	public $spawnZ;
 	public $x;
 	public $y;
-	public $z;	
+	public $z;
 	public $stringClientVersion;
-	
+
 	public static $defaultRules = [
 		['name' => 'naturalregeneration', 'type' => 1, 'value' => 0],
 		['name' => 'showcoordinates', 'type' => 1, 'value' => 1]
 	];
 	public $multiplayerCorrelationId;
 	public $originalProtocolPlayer = 0;
-	
+
 	static public $itemsList = [];
-	
+
 
 	public function decode($playerProtocol){
 
@@ -58,12 +58,12 @@ class StartGamePacket extends PEPacket{
 		$this->putLFloat($this->x); // default position (4)
 		$this->putLFloat($this->y); // (4)
 		$this->putLFloat($this->z); // (4)
-		
+
 		$this->putLFloat(0);
 		$this->putLFloat(0);
-		
+
 		// Level settings
-		
+
 		$this->putSignedVarInt($this->seed);
 
 		if ($playerProtocol == Info::PROTOCOL_400 || $playerProtocol == Info::PROTOCOL_401) {
@@ -72,24 +72,24 @@ class StartGamePacket extends PEPacket{
 			$this->putString(0);
 		}
 		if ($playerProtocol >= Info::PROTOCOL_406 && $this->originalProtocolPlayer >= Info::PROTOCOL_406) {
-			$this->putShort(0); //SpawnSettingsType			
+			$this->putShort(0); //SpawnSettingsType
 			$this->putString(''); //User Difined Biome type
 		}
 		$this->putSignedVarInt($this->dimension);
-		
+
 		$this->putSignedVarInt($this->generator);
-		
+
 		$this->putSignedVarInt($this->gamemode);
-		
+
 		$this->putSignedVarInt(1); // Difficulty
-		
+
 		// default spawn 3x VarInt
 		$this->putSignedVarInt($this->spawnX);
 		$this->putVarInt($this->spawnY);
 		$this->putSignedVarInt($this->spawnZ);
 
 		$this->putByte(1); // hasAchievementsDisabled
-		
+
 		$this->putSignedVarInt(0); // DayCycleStopTyme 1x VarInt
 		if ($playerProtocol == Info::PROTOCOL_400 || $playerProtocol == Info::PROTOCOL_401) {
 			$this->putByte(0);
@@ -98,7 +98,7 @@ class StartGamePacket extends PEPacket{
 			$this->putSignedVarInt(0); //edu edition offer
 		}
 		$this->putByte(0); //edu mode
-		
+
 		if ($playerProtocol < Info::PROTOCOL_415 && $playerProtocol >= Info::PROTOCOL_260 && $this->stringClientVersion != '1.2.20.1') {
 			$this->putByte(0); // Are education features enabled?
 		}
@@ -106,7 +106,7 @@ class StartGamePacket extends PEPacket{
 		if ($playerProtocol >= Info::PROTOCOL_406 && $this->originalProtocolPlayer >= Info::PROTOCOL_406) {
 			$this->putString(''); //edu product id
 		}
-		
+
 		$this->putLFloat(0); //rain level
 
 		$this->putLFloat(0); //lightning level
@@ -114,7 +114,7 @@ class StartGamePacket extends PEPacket{
 		if ($playerProtocol >= Info::PROTOCOL_332) {
 			$this->putByte(0); // has confirmed platform Locked Content
 		}
-		
+
 		if ($playerProtocol >= Info::PROTOCOL_120) {
 			$this->putByte(1); // is multiplayer game
 			$this->putByte(1); // Broadcast to LAN?
@@ -122,19 +122,19 @@ class StartGamePacket extends PEPacket{
 				$this->putSignedVarInt(self::BROADCAST_SETTINGS_FRIENDS_OF_FRIENDS); // XBox Live Broadcast setting
 			    if ($playerProtocol < Info::PROTOCOL_401 || $playerProtocol >= Info::PROTOCOL_415) {
 			    	$this->putSignedVarInt(self::BROADCAST_SETTINGS_FRIENDS_OF_FRIENDS); // Platform Broadcast setting
-			    }	
+			    }
 			} else {
 				$this->putByte(1); // Broadcast to XBL?
 			}
 		}
-				
+
 		if ($playerProtocol >= Info::PROTOCOL_392 && $playerProtocol < Info::PROTOCOL_400) {
 			$this->putByte(0); // unknown
 		}
-		
+
 		$this->putByte(1);	// commands enabled
 
-		$this->putByte(0); // isTexturepacksRequired 1x Byte		
+		$this->putByte(0); // isTexturepacksRequired 1x Byte
 		if ($playerProtocol >= Info::PROTOCOL_120) {
 			$this->putVarInt(count(self::$defaultRules)); // rules count
 			foreach (self::$defaultRules as $rule) {
@@ -153,7 +153,7 @@ class StartGamePacket extends PEPacket{
 					case 3:
 						$this->putLFloat($rule['value']);
 						break;
-				}	
+				}
 			}
 			if($playerProtocol >= Info::PROTOCOL_415){
 	        	$this->putLInt(0); //Experiments
@@ -188,11 +188,11 @@ class StartGamePacket extends PEPacket{
 				if ($playerProtocol >= Info::PROTOCOL_361) {
 					$this->putByte(0); // Only spawn v1 villagers
 				}
-				
+
 				if ($playerProtocol >= Info::PROTOCOL_370) {
 				    $this->putString(''); // Vanila version
 			    }
-			    
+
 		    	if ($playerProtocol == Info::PROTOCOL_386) {
 			    	$this->putByte(0); // unknown
 			    	$this->putByte(1); // unknown
@@ -201,7 +201,7 @@ class StartGamePacket extends PEPacket{
 			}
 	    	if ($playerProtocol >= Info::PROTOCOL_392) {
 			    $this->putLInt(16); //Limited word width
-			    $this->putLInt(16); //Limited word depth			
+			    $this->putLInt(16); //Limited word depth
 		    }
 	    	if ($playerProtocol >= Info::PROTOCOL_400) {
 		    	$this->putByte(1); //Nether type
@@ -223,7 +223,7 @@ class StartGamePacket extends PEPacket{
 	        if ($playerProtocol >= Info::PROTOCOL_389) {
 			    if ($playerProtocol >= Info::PROTOCOL_415) {
 			        $this->putVarInt(0);
-				    if ($playerProtocol >= Info::PROTOCOL_428) {	
+				    if ($playerProtocol >= Info::PROTOCOL_428) {
 				    	$this->putSignedVarInt(0);
 				    	$this->putByte(0);
 			    	}
@@ -245,7 +245,7 @@ class StartGamePacket extends PEPacket{
 		    }
 			if ($playerProtocol >= Info::PROTOCOL_360) {
 		    	if ($playerProtocol >= Info::PROTOCOL_415) {
-			    	$itemsData = self::getItemsList();
+			    	$itemsData = self::getItemsList($playerProtocol);
 			    	$this->putVarInt(count($itemsData));
 			    	foreach ($itemsData as $name => $id) {
 			    		$this->putString($name);
@@ -253,7 +253,7 @@ class StartGamePacket extends PEPacket{
 			    		if($playerProtocol >= Info::PROTOCOL_418){
 					        $this->putByte(0);
 			    		}
-			    	}			
+			    	}
 		    	} else {
 			        $this->putVarInt(0); // item list size
 		    	}
@@ -272,13 +272,19 @@ class StartGamePacket extends PEPacket{
 	    	}
 		}
 	}
-	static protected function getItemsList() {
+	static protected function getItemsList($playerProtocol) {
 		if (!empty(self::$itemsList)) {
 			return self::$itemsList;
 		} else {
-		    $path = __DIR__ . "/data/Items.json";
-			self::$itemsList = json_decode(file_get_contents($path), true);
-			return self::$itemsList;
+			if($playerProtocol >= Info::PROTOCOL_120){
+				$path = __DIR__ . "/data/Items120.json";
+				self::$itemsList = json_decode(file_get_contents($path), true);
+				return self::$itemsList;
+			}else{
+				$path = __DIR__ . "/data/Items.json";
+				self::$itemsList = json_decode(file_get_contents($path), true);
+				return self::$itemsList;
+			}
 		}
 	}
 }

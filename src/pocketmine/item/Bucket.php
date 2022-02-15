@@ -78,9 +78,12 @@ class Bucket extends Item{
 
 		//if($targetBlock instanceof Air){
 			if($target instanceof Water){
-				if($player->getInventory()->getItemInHand()->getDamage() == 0){
 				//$result = Item::get(self::$bucketByTarget[$target->getId()], 0, 1);;
-				$result = Item::get(Item::BUCKET, 8, 1);
+				if($player->getProtocol() >= 120){
+					$result = Item::get(Item::WATER_BUCKET, 0, 1);
+				}else{
+					$result = Item::get(Item::BUCKET, 8, 1);
+				}
 				//print_r($result);
 				$player->getServer()->getPluginManager()->callEvent($ev = new PlayerBucketFillEvent($player, $block, $face, $this, $result));
 				if(!$ev->isCancelled()){
@@ -94,14 +97,13 @@ class Bucket extends Item{
 							$player->getInventory()->addItem($ev->getItem());
 						}
 
-					}
-					return true;*/
+					}*/
+					return true;
 				}else{
 					$player->getInventory()->sendContents($player);
+					return false;
 				}
-			}
-			}elseif($block instanceof Air){
-				if($player->getInventory()->getItemInHand()->getDamage() == 8){
+			}elseif($block instanceof Air or $block instanceof Water){
 					$result = Item::get(Item::BUCKET, 0, 1);
 					$player->getServer()->getPluginManager()->callEvent($ev = new PlayerBucketFillEvent($player, $block, $face, $this, $result));
 					if(!$ev->isCancelled()){
@@ -111,12 +113,12 @@ class Bucket extends Item{
 							$player->getInventory()->setItemInHand($ev->getItem(), $player);
 						}
 						return true;*/
+						return true;
 					}else{
 						$player->getInventory()->sendContents($player);
 					}
+				}else{
+					return false;
 				}
+			}
 		}
-
-		return false;
-	}
-}

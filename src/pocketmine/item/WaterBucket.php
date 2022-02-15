@@ -32,9 +32,9 @@ use pocketmine\event\player\PlayerBucketFillEvent;
 use pocketmine\level\Level;
 use pocketmine\Player;
 
-class BucketWater extends Item{
+class WaterBucket extends Item{
 
-	protected $itemIdBucket = self::BUCKETWATER;
+	protected $itemIdBucket = self::WATER_BUCKET;
 	protected $targetBlock = Block::AIR;
 
 	protected static $bucketByTarget = [
@@ -46,7 +46,7 @@ class BucketWater extends Item{
 	];
 
 	public function __construct($meta = 0, $count = 1){
-		parent::__construct($this->itemIdBucket, 8, $count, "BucketWater");
+		parent::__construct($this->itemIdBucket, $meta, $count, "Water Bucket");
 	}
 
 	public function getMaxStackSize(){
@@ -67,30 +67,7 @@ class BucketWater extends Item{
 		//$targetBlock = Block::get($this->targetBlock);
 
 		//if($targetBlock instanceof Air){
-			if($target instanceof Water){
-				if($player->getInventory()->getItemInHand()->getDamage() == 0){
-				//$result = Item::get(self::$bucketByTarget[$target->getId()], 0, 1);;
-				$result = Item::get(Item::BUCKET, 8, 1);
-				$player->getServer()->getPluginManager()->callEvent($ev = new PlayerBucketFillEvent($player, $block, $face, $this, $result));
-				if(!$ev->isCancelled()){
-					$player->getLevel()->setBlock($target, new Air(), true, true);
-					$player->getInventory()->setItemInHand($ev->getItem(), $player);
-					/*if($player->isSurvival()){
-						if ($this->count <= 1) {
-							$player->getInventory()->setItemInHand($ev->getItem(), $player);
-						} else {
-							$this->count--;
-							$player->getInventory()->addItem($ev->getItem());
-						}
-
-					}
-					return true;*/
-				}else{
-					$player->getInventory()->sendContents($player);
-				}
-			}
-			}elseif($block instanceof Air){
-				if($player->getInventory()->getItemInHand()->getDamage() == 8){
+			if($block instanceof Air or $block instanceof Water){
 					$result = Item::get(Item::BUCKET, 0, 1);
 					$player->getServer()->getPluginManager()->callEvent($ev = new PlayerBucketFillEvent($player, $block, $face, $this, $result));
 					if(!$ev->isCancelled()){
@@ -100,12 +77,12 @@ class BucketWater extends Item{
 							$player->getInventory()->setItemInHand($ev->getItem(), $player);
 						}
 						return true;*/
+						return true;
 					}else{
 						$player->getInventory()->sendContents($player);
 					}
+				}else{
+					return false;
 				}
+			}
 		}
-
-		return false;
-	}
-}

@@ -399,7 +399,7 @@ class Item{
 	const NEWVERSION_GOLDEN_SHOVEL = 323;
 	const NEWVERSION_GOLDEN_PICKAXE = 324;
 	const NEWVERSION_GOLDEN_AXE = 325;
-	const BUCKETWATER = 325;
+	const WATER_BUCKET = 326;
 	const NEWVERSION_FEATHER = 327;
 	const NEWVERSION_GUNPOWDER = 328;
 	const NEWVERSION_WOODEN_HOE = 329;
@@ -1571,7 +1571,7 @@ class Item{
 			self::$list[self::BOAT] = Boat::class;
 			self::$list[self::FISHING_ROD] = FishingRod::class;
 			self::$list[self::BUCKET] = Bucket::class;
-			//self::$list[self::BUCKETWATER] = BucketWater::class;
+			self::$list[self::WATER_BUCKET] = WaterBucket::class;
 			self::$list[self::IRON_DOOR] = IronDoor::class;
 			self::$list[self::CAKE] = Cake::class;
 			self::$list[self::BED] = Bed::class;
@@ -1693,6 +1693,7 @@ class Item{
 	}
 
 	private static $creative = [];
+	private static $creative110 = [];
 
 	private static function initCreativeItems(){
 		self::clearCreativeItems();
@@ -1781,10 +1782,12 @@ class Item{
 		self::addCreativeItem(Item::get(Item::STONE_SLAB2, 6), self::CREATIVE_GROUP_SLAB);
 		self::addCreativeItem(Item::get(Item::STONE_SLAB2, 7), self::CREATIVE_GROUP_SLAB);
 
+		self::addCreativeItem110(Item::get(Item::BUCKET, 0));
+		self::addCreativeItem110(Item::get(Item::BUCKET, 1));
+		self::addCreativeItem110(Item::get(Item::BUCKET, 8));
+		self::addCreativeItem110(Item::get(Item::BUCKET, 10));
+		self::addCreativeItem(Item::get(Item::WATER_BUCKET, 0));
 		self::addCreativeItem(Item::get(Item::BUCKET, 0));
-		self::addCreativeItem(Item::get(Item::BUCKETWATER, 8));
-		self::addCreativeItem(Item::get(Item::BUCKET, 10));
-		self::addCreativeItem(Item::get(Item::BUCKET, 1));
 
 		self::addCreativeItem(Item::get(Item::STONE_BRICKS, 0), self::CREATIVE_GROUP_STONEBRICK);
 		self::addCreativeItem(Item::get(Item::STONE_BRICKS, 1), self::CREATIVE_GROUP_STONEBRICK);
@@ -2052,20 +2055,33 @@ class Item{
 
 	public static function clearCreativeItems(){
 		Item::$creative = [];
+		Item::$creative110 = [];
 	}
 
-	public static function getCreativeItems(){
-		return Item::$creative;
+	public static function getCreativeItems($protocol){
+		if($protocol >= 120){
+			return Item::$creative;
+		}else{
+			return Item::$creative110;
+		}
+	}
+
+	public static function addCreativeItem110(Item $item, $creativeGroup = self::CREATIVE_GROUP_NONE){
+		Item::$creative110[] = ["item" => Item::get($item->getId(), $item->getDamage()), "group" => $creativeGroup];
 	}
 
 	public static function addCreativeItem(Item $item, $creativeGroup = self::CREATIVE_GROUP_NONE){
 		Item::$creative[] = ["item" => Item::get($item->getId(), $item->getDamage()), "group" => $creativeGroup];
+		if($item->getId() != 326 and $item->getId() != 325){
+			Item::$creative110[] = ["item" => Item::get($item->getId(), $item->getDamage()), "group" => $creativeGroup];
+		}
 	}
 
 	public static function removeCreativeItem(Item $item){
 		$index = self::getCreativeItemIndex($item);
 		if($index !== -1){
 			unset(Item::$creative[$index]);
+			unset(Item::$creative110[$index]);
 		}
 	}
 
@@ -2496,7 +2512,7 @@ class Item{
 		if(!isset(Fuel::$duration[$this->id])){
 			return null;
 		}
-		if($this->id !== self::BUCKET or $this->id !== self::NEW_BUCKET or $this->meta === 10){
+		if($this->id !== self::BUCKET or $this->id !== self::WATER_BUCKET or $this->meta === 10){
 			return Fuel::$duration[$this->id];
 		}
 
