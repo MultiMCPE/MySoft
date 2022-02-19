@@ -24,10 +24,12 @@ namespace pocketmine\item;
 use pocketmine\block\Air;
 use pocketmine\block\Block;
 use pocketmine\block\Water;
+use pocketmine\block\Lava;
 use pocketmine\block\Liquid;
 use pocketmine\block\Slab;
 use pocketmine\block\Slab2;
 use pocketmine\block\WoodSlab;
+use pocketmine\math\Vector3;
 use pocketmine\event\player\PlayerBucketFillEvent;
 use pocketmine\level\Level;
 use pocketmine\Player;
@@ -73,10 +75,6 @@ class LavaBucket extends Item{
 					if(!$ev->isCancelled()){
 						$player->getLevel()->setBlock($block, new Lava(), true, true);
 						$player->getInventory()->setItemInHand($ev->getItem(), $player);
-						/*if($player->isSurvival()){
-							$player->getInventory()->setItemInHand($ev->getItem(), $player);
-						}
-						return true;*/
 						return true;
 					}else{
 						$player->getInventory()->sendContents($player);
