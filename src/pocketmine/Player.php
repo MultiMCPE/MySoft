@@ -2986,14 +2986,26 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 	 *
 	 * @param string|TextContainer $message
 	 */
-	public function sendMessage($message){
-		$mes = explode("\n", $message);
-		foreach($mes as $m){
-			if($m !== ""){
-				$this->messageQueue[] = $m;
-			}
-		}
-	}
+	 public function sendMessage($message){
+ 		if($message instanceof TextContainer){
+ 			if($message instanceof TranslationContainer){
+ 				$this->sendTranslation($message->getText(), $message->getParameters());
+ 				return false;
+ 			}
+
+ 			$message = $message->getText();
+ 		}
+
+ 		//TODO: Remove this workaround (broken client MCPE 1.0.0)
+ 		$this->messageQueue[] = $this->server->getLanguage()->translateString($message);
+ 		/*
+ 		$pk = new TextPacket();
+ 		$pk->type = TextPacket::TYPE_RAW;
+ 		$pk->message = $this->server->getLanguage()->translateString($message);
+ 		$this->dataPacket($pk);
+ 		*/
+ 	}
+
 
 
 	public function sendChatMessage($senderName, $message) {

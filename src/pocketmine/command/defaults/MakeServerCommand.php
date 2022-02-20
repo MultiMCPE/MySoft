@@ -26,7 +26,7 @@ namespace pocketmine\command\defaults;
 
 use pocketmine\command\CommandSender;
 use pocketmine\Server;
-use pocketmine\network\mcpe\protocol\ProtocolInfo;
+use pocketmine\network\protocol\ProtocolInfo;
 
 class MakeServerCommand extends VanillaCommand {
 
@@ -51,7 +51,7 @@ class MakeServerCommand extends VanillaCommand {
 	 *
 	 * @return bool
 	 */
-	public function execute(CommandSender $sender, $commandLabel, array $args){
+	public function execute(CommandSender $sender, string $commandLabel, array $args){
 		if(!$this->testPermission($sender)){
 			return false;
 		}

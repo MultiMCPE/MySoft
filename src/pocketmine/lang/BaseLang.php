@@ -40,7 +40,7 @@ class BaseLang {
 	 * @param null   $path
 	 * @param string $fallback
 	 */
-	public function __construct($lang, $path = null, $fallback = self::FALLBACK_LANGUAGE){
+	public function __construct($lang, $fallback = self::FALLBACK_LANGUAGE, $path = null){
 
 		$this->langName = strtolower($lang);
 
