@@ -24,7 +24,7 @@ namespace pocketmine\block;
 use pocketmine\entity\Entity;
 use pocketmine\item\Item;
 use pocketmine\Player;
-use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
+use pocketmine\network\protocol\LevelSoundEventPacket;
 
 class Water extends Liquid {
 

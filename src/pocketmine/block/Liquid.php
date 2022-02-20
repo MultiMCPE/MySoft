@@ -28,7 +28,7 @@ use pocketmine\level\Level;
 use pocketmine\level\particle\SmokeParticle;
 use pocketmine\level\sound\FizzSound;
 use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
+use pocketmine\network\protocol\LevelSoundEventPacket;
 use function array_fill;
 use function intdiv;
 use function lcg_value;

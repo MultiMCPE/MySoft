@@ -103,22 +103,30 @@ class Bucket extends Item{
 					$player->getInventory()->sendContents($player);
 					return false;
 				}
-			}elseif($block instanceof Air or $block instanceof Water){
-				if($player->getInventory()->getItemInHand() == Item::get(Item::BUCKET, 8, 1) or $player->getInventory()->getItemInHand() == Item::get(Item::WATER_BUCKET, 0, 1)){
-					$result = Item::get(Item::BUCKET, 0, 1);
-					$player->getServer()->getPluginManager()->callEvent($ev = new PlayerBucketFillEvent($player, $block, $face, $this, $result));
-					if(!$ev->isCancelled()){
-						$player->getLevel()->setBlock($block, new Water(), true, true);
-						$player->getInventory()->setItemInHand($ev->getItem(), $player);
-						/*if($player->isSurvival()){
-							$player->getInventory()->setItemInHand($ev->getItem(), $player);
-						}
-						return true;*/
-						return true;
-					}else{
-						$player->getInventory()->sendContents($player);
-					}
+			}elseif($target instanceof Lava){
+				//$result = Item::get(self::$bucketByTarget[$target->getId()], 0, 1);;
+				if($player->getProtocol() >= 120){
+					$result = Item::get(Item::LAVA_BUCKET, 0, 1);
 				}else{
+					$result = Item::get(Item::BUCKET, 10, 1);
+				}
+				//print_r($result);
+				$player->getServer()->getPluginManager()->callEvent($ev = new PlayerBucketFillEvent($player, $block, $face, $this, $result));
+				if(!$ev->isCancelled()){
+					$player->getLevel()->setBlock($target, new Air(), true, true);
+					$player->getInventory()->setItemInHand($ev->getItem(), $player);
+					if($player->isSurvival()){
+						if ($this->count <= 1) {
+							$player->getInventory()->setItemInHand($ev->getItem(), $player);
+						} else {
+							$this->count--;
+							$player->getInventory()->addItem($ev->getItem());
+						}
+
+					}
+					return true;
+				}else{
+					$player->getInventory()->sendContents($player);
 					return false;
 				}
 			}
