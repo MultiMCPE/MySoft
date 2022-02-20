@@ -410,6 +410,9 @@ class Block extends Position implements Metadatable {
 	/** @var \SplFixedArray */
 	public static $liquid= null;
 	/** @var \SplFixedArray */
+	public static $diffusesSkyLight = null;
+	public static $blastResistance = null;
+	/** @var \SplFixedArray */
 	public static $hardness = null;
 	/** @var \SplFixedArray */
 	public static $transparent = null;
@@ -738,6 +741,10 @@ class Block extends Position implements Metadatable {
 		}
 	}
 
+	public function diffusesSkyLight() : bool{
+		return false;
+	}
+
 	public static function registerBlock($id, $class) {
 		if (self::$list[$id] != $class) {
 			self::$list[$id] = $class;
@@ -755,20 +762,9 @@ class Block extends Position implements Metadatable {
 			self::$hardness[$id] = $block->getHardness();
 			self::$light[$id] = $block->getLightLevel();
 			self::$liquid[$id] = $block->isLiquid();
-
-			if ($block->isSolid()) {
-				if ($block->isTransparent()) {
-					if ($block instanceof Liquid or $block instanceof Ice) {
-						self::$lightFilter[$id] = 2;
-					} else {
-						self::$lightFilter[$id] = 1;
-					}
-				} else {
-					self::$lightFilter[$id] = 15;
-				}
-			} else {
-				self::$lightFilter[$id] = 1;
-			}
+			self::$lightFilter[$id] = min(15, $block->getLightFilter() + 1); //opacity plus 1 standard light filter
+			self::$diffusesSkyLight[$id] = $block->diffusesSkyLight();
+			self::$blastResistance[$id] = $block->getResistance();
 		} else {
 			self::$lightFilter[$id] = 1;
 			for ($data = 0; $data < 16; ++$data) {
@@ -842,6 +838,10 @@ class Block extends Position implements Metadatable {
 	 */
 	public function isBreakable(Item $item){
 		return true;
+	}
+
+	public function getLightFilter() : int{
+		return 15;
 	}
 
 	/**
