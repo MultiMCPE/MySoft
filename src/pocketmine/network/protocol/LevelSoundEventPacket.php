@@ -9,7 +9,7 @@ class LevelSoundEventPacket extends PEPacket {
 
 	const NETWORK_ID = Info::LEVEL_SOUND_EVENT_PACKET;
 	const PACKET_NAME = "LEVEL_SOUND_EVENT_PACKET";
-	
+
 	const SOUND_LARGE_BLAST = 'SOUND_LARGE_BLAST'; //for firework
 	const SOUND_TWINKLE = 'SOUND_TWINKLE'; //for firework
 	const SOUND_BLAST = 'SOUND_BLAST'; //for firework
@@ -30,6 +30,7 @@ class LevelSoundEventPacket extends PEPacket {
 	const SOUND_SPAWN = 'SOUND_SPAWN';
 	const SOUND_FUSE = 'SOUND_FUSE';
 	const SOUND_BOW_HIT = 'SOUND_BOW_HIT';
+	const SOUND_FIZZ = 'SOUND_FIZZ';
 	const SOUND_SHULKERBOX_OPEN = 'SOUND_SHULKERBOX_OPEN';
 	const SOUND_SHULKERBOX_CLOSED = 'SOUND_SHULKERBOX_CLOSED';
 	const EVENT_SOUND_ITEMFRAME_ADD_ITEM = 'EVENT_SOUND_ITEMFRAME_ADD_ITEM';
@@ -62,7 +63,7 @@ class LevelSoundEventPacket extends PEPacket {
 			}
 		} else {
 			$this->blockId = $this->getSignedVarInt();
-		}	
+		}
 		if ($playerProtocol >= Info::PROTOCOL_310) {
 			$entityName = $this->getString();
 			$this->entityType = Entity::getIDByName($entityName);

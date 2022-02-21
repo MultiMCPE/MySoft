@@ -24,6 +24,7 @@ namespace pocketmine\item;
 use pocketmine\block\Air;
 use pocketmine\block\Block;
 use pocketmine\block\Water;
+use pocketmine\block\Lava;
 use pocketmine\block\Liquid;
 use pocketmine\block\Slab;
 use pocketmine\block\Slab2;
@@ -84,7 +85,6 @@ class Bucket extends Item{
 				}else{
 					$result = Item::get(Item::BUCKET, 8, 1);
 				}
-				//print_r($result);
 				$player->getServer()->getPluginManager()->callEvent($ev = new PlayerBucketFillEvent($player, $block, $face, $this, $result));
 				if(!$ev->isCancelled()){
 					$player->getLevel()->setBlock($target, new Air(), true, true);

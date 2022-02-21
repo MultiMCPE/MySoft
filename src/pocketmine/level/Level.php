@@ -442,15 +442,16 @@ class Level implements ChunkManager, Metadatable{
 		}
 	}
 
-	public function broadcastLevelSoundEvent(Vector3 $pos, int $soundId, int $pitch = 1, int $extraData = -1) {
-        $pk = new LevelSoundEventPacket();
-        $pk->sound = $soundId;
-        $pk->pitch = $pitch;
-        $pk->extraData = $extraData;
-        list($pk->x, $pk->y, $pk->z) = [$pos->x, $pos->y, $pos->z];
-        $players = $this->getUsingChunk($pos->x >> 4, $pos->z >> 4);
-				Server::broadcastPacket($players, $pk);
-    }
+	public function broadcastLevelSoundEvent(Vector3 $pos, $soundId) {
+		$pk = new LevelSoundEventPacket();
+		$pk->eventId = $soundId;
+		$pk->x = $pos->x;
+		$pk->y = $pos->y;
+		$pk->z = $pos->z;
+		$pk->blockId = -1;
+		$pk->entityType = 1;
+		Server::getInstance()->batchPackets($this->getUsingChunk($pos->x >> 4, $pos->z >> 4), [$pk]);
+  }
 
 	public function addParticle(Particle $particle, array $players = null){
 		if($players === null){

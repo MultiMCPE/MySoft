@@ -474,7 +474,7 @@ abstract class Liquid extends Transparent{
 		//TODO: add events
 
 		$this->level->setBlock($this, $result, true, true);
-		$this->level->broadcastLevelSoundEvent($this->add(0.5, 0.5, 0.5), LevelSoundEventPacket::SOUND_FIZZ, (int) ((2.6 + (lcg_value() - lcg_value()) * 0.8) * 1000));
+		$this->level->broadcastLevelSoundEvent($this->add(0.5, 0.5, 0.5), LevelSoundEventPacket::SOUND_FIZZ);
 		return true;
 	}
 

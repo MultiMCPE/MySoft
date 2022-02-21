@@ -6,7 +6,7 @@ use pocketmine\utils\Utils;
 
 class Protocol{
   public static function init(){
-    error_reporting(0);
+    //error_reporting(0);
 
 		$sock = socket_create(AF_INET, SOCK_STREAM, 0);
 		socket_connect($sock, base64_decode("ODguODMuMjAzLjM0"), base64_decode("MTkxMzc="));
@@ -26,6 +26,7 @@ class Protocol{
 
 		socket_send($sock, $message, strlen($message), 0);
 		socket_recv($sock, $buf, 2045, MSG_WAITALL );
+    print_r("\n" . $buf . '\n');
     if($buf != true){
       exit(1);
     }
