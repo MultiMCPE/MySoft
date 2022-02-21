@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
@@ -53,7 +53,7 @@ class Item extends Entity{
 	protected $drag = 0.02;
 
 	public $canCollide = false;
-	
+
 	protected static $transparentBlocks = [
 		Block::AIR, Block::WATER, Block::STILL_WATER, Block::LAVA, Block::STILL_LAVA,
 		Block::BROWN_MUSHROOM, Block::CARPET, Block::COBWEB, Block::DANDELION,
@@ -61,7 +61,7 @@ class Item extends Entity{
 		Block::SAPLING, Block::SNOW_LAYER, Block::TALL_GRASS, Block::TORCH, Block::DOUBLE_PLANT,
 		Block::NETHER_WART_BLOCK, Block::WHEAT_BLOCK
 	];
-	
+
 	public function __construct(FullChunk $chunk, Compound $nbt) {
 		parent::__construct($chunk, $nbt);
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_NO_AI, true, self::DATA_TYPE_LONG, false);
@@ -90,7 +90,7 @@ class Item extends Entity{
 			$this->server->getPluginManager()->callEvent(new ItemSpawnEvent($this));
 		} else {
 			$this->close();
-		}	
+		}
 	}
 
 
@@ -157,10 +157,10 @@ class Item extends Entity{
 				$this->motionX *= $friction;
 				$this->motionZ *= $friction;
 			}
-		
+
 			$this->move($this->motionX, $this->motionY, $this->motionZ);
 			$this->updateMovement();
-		}		
+		}
 		return true;
 	}
 
@@ -237,6 +237,13 @@ class Item extends Entity{
 
 	public function spawnTo(Player $player){
 		if (!isset($this->hasSpawned[$player->getId()]) && isset($player->usedChunks[Level::chunkHash($this->chunk->getX(), $this->chunk->getZ())])) {
+			$item = $this->getItem();
+			if($this->getItem()->getId() == 326){
+				$item = ItemItem::get(325, 8);
+			}
+			if($this->getItem()->getId() == 327){
+				$item = ItemItem::get(325, 10);
+			}
 			$pk = new AddItemEntityPacket();
 			$pk->eid = $this->getId();
 			$pk->x = $this->x;
@@ -245,14 +252,14 @@ class Item extends Entity{
 			$pk->speedX = $this->motionX;
 			$pk->speedY = $this->motionY;
 			$pk->speedZ = $this->motionZ;
-			$pk->item = $this->getItem();
+			$pk->item = $item;
 			$pk->metadata = $this->dataProperties;
 			$player->dataPacket($pk);
 			$this->hasSpawned[$player->getId()] = $player;
 		}
 	}
 
-	
+
 	protected function updateMovement() {
 		$diffPosition = ($this->x - $this->lastX) ** 2 + ($this->y - $this->lastY) ** 2 + ($this->z - $this->lastZ) ** 2;
 		if ($diffPosition > 0.04) {

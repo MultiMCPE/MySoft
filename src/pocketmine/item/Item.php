@@ -1783,11 +1783,10 @@ class Item{
 		self::addCreativeItem(Item::get(Item::STONE_SLAB2, 6), self::CREATIVE_GROUP_SLAB);
 		self::addCreativeItem(Item::get(Item::STONE_SLAB2, 7), self::CREATIVE_GROUP_SLAB);
 
-		self::addCreativeItem110(Item::get(Item::BUCKET, 0));
+		self::addCreativeItem(Item::get(Item::BUCKET, 0));
 		self::addCreativeItem110(Item::get(Item::BUCKET, 1));
 		self::addCreativeItem110(Item::get(Item::BUCKET, 8));
 		self::addCreativeItem110(Item::get(Item::BUCKET, 10));
-		self::addCreativeItem(Item::get(Item::BUCKET, 0));
 		self::addCreativeItem(Item::get(Item::WATER_BUCKET, 0));
 		self::addCreativeItem(Item::get(Item::LAVA_BUCKET, 0));
 
@@ -2074,7 +2073,7 @@ class Item{
 
 	public static function addCreativeItem(Item $item, $creativeGroup = self::CREATIVE_GROUP_NONE){
 		Item::$creative[] = ["item" => Item::get($item->getId(), $item->getDamage()), "group" => $creativeGroup];
-		if($item->getId() != 326 and $item->getId() != 325){
+		if($item->getId() != 326 and $item->getId() != 327){
 			Item::$creative110[] = ["item" => Item::get($item->getId(), $item->getDamage()), "group" => $creativeGroup];
 		}
 	}
