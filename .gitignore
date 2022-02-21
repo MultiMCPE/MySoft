@@ -1,6 +1,7 @@
 players/*
 players_logs/*
 logs/*
+*client.php
 /commands-list.yml
 *.sqlite
 *.db
