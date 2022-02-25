@@ -2126,11 +2126,13 @@ class Level implements ChunkManager, Metadatable{
 		$chunkIndex = Level::chunkHash($x, $z);
 
 		if (isset($this->chunkCache[$chunkIndex][$protocol])) {
+		    $player->useChunk($x, $z);
 		    $player->dataPacket($this->chunkCache[$chunkIndex][$protocol]);
 		    return;
 		}
 
 		$data = $this->provider->requestChunkTask($x, $z);
+		$player->useChunk($x, $z);
 		$chunk = $this->doChunk($player, $x, $z, $protocol, $data);
 		$this->chunkCache[$chunkIndex][$protocol] = $chunk;
 
