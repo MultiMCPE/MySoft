@@ -911,6 +911,10 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 	}
 
 	public function useChunk($x, $z){
+		if($this->connected === false){
+			return;
+		}
+		
         $this->usedChunks[Level::chunkHash($x, $z)] = true;
 
 		$this->chunkLoadCount++;
@@ -949,8 +953,8 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 
 			++$count;
 
+            $this->usedChunks[$index] = false;
 			$this->level->useChunk($X, $Z, $this, false);
-			$this->useChunk($X, $Z);
 
 			if(!$this->level->populateChunk($X, $Z, true)){
 				continue;
