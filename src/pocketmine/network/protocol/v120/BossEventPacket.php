@@ -28,7 +28,39 @@ class BossEventPacket extends PEPacket {
 	public $playerID = -1;
 	public $healthPercent = 1.0; // from 0 to 1
 	
-	public function decode($playerProtocol) {}
+	public function decode($playerProtocol) {
+	    $this->getHeader($playerProtocol);
+	    $this->eid = $this->getVarInt();
+	    $this->eventType = $this->getVarInt();
+		switch ($this->eventType) {
+			case self::EVENT_TYPE_ADD:
+				$this->bossName = $this->getString();
+				$this->healthPercent = $this->getLFloat();
+				$this->darkenScreen = $this->getLShort();
+				$this->color = $this->getVarInt();
+				$this->overlay = $this->getVarInt();
+				break;
+			case self::EVENT_TYPE_PLAYER_ADDED:
+			case self::EVENT_TYPE_PLAYER_REMOVED:
+				$this->playerID = $this->getVarInt();
+				break;
+			case self::EVENT_TYPE_UPDATE_PERCENT:
+				$this->healthPercent = $this->getLFloat();
+				break;
+			case self::EVENT_TYPE_UPDATE_NAME:
+				$this->bossName = $this->getString();
+				break;
+			case self::EVENT_TYPE_UPDATE_PROPERTIES:
+				$this->darkenScreen = $this->getLShort();
+				$this->color = $this->getVarInt();
+				$this->overlay = $this->getVarInt();
+				break;
+			case self::EVENT_TYPE_UPDATE_STYLE:
+				$this->color = $this->getVarInt();
+				$this->overlay = $this->getVarInt();
+				break;
+		}
+	}
 
 	public function encode($playerProtocol) {
 		$this->reset($playerProtocol);
