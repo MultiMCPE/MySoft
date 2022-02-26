@@ -2059,7 +2059,7 @@ class Item{
 		Item::$creative110 = [];
 	}
 
-	public static function getCreativeItems($protocol){
+	public static function getCreativeItems($protocol = 120){
 		if($protocol >= 120){
 			return Item::$creative;
 		}else{
