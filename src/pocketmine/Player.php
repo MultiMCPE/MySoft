@@ -294,7 +294,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 	protected $chunksPerTick;
 	protected $spawnThreshold;
 	/** @var int */
-	protected $chunkLoadCount = 0;
+	protected $spawnChunkLoadCount = 0;
 	/** @var null|Position */
 	private $spawnPosition = null;
 
@@ -917,8 +917,6 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 		
         $this->usedChunks[Level::chunkHash($x, $z)] = true;
 
-		$this->chunkLoadCount++;
-
 		if($this->spawned){
 			foreach($this->level->getChunkEntities($x, $z) as $entity){
 				if($entity !== $this and !$entity->closed and !$entity->dead and $this->canSeeEntity($entity)){
@@ -927,7 +925,12 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 			}
 		}
 
-		if($this->chunkLoadCount !== -1 and ++$this->chunkLoadCount >= $this->spawnThreshold){
+		if($this->spawnChunkLoadCount !== -1 and ++$this->spawnChunkLoadCount >= $this->spawnThreshold){
+	    	$pk = new PlayStatusPacket();
+	    	$pk->status = PlayStatusPacket::PLAYER_SPAWN;
+	    	$this->directDataPacket($pk);
+	    	
+			$this->spawnChunkLoadCount = -1;
 		    $this->doFirstSpawn();
 		}
 	}
@@ -1120,9 +1123,6 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 		if($this->connected === false){
 			return false;
 		}
-		if($packet->pname() != "BATCH_PACKET" and $packet->pname() != "MOVE_ENTITY_PACKET"){
-			//print_r($packet->pname() . "\n");
-		}
 
 		$timings = Timings::getSendDataPacketTimings($packet);
 		$timings->startTiming();
@@ -1133,15 +1133,15 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 	    	    $timings->stopTiming();
 		    	return false;
 	    	}
-
-				if($packet::PACKET_NAME == "MOVE_ENTITY_PACKET"){
+            
+            switch ($packet->pname()) {
+                case "MOVE_ENTITY_PACKET":
 					$packet->player = $this;
-				}
-
-	    	if($packet->pname() == "BATCH_PACKET"){
-		    	$packet->encode($this->protocol);
-		    	$this->interface->putReadyPacket($this, $packet->getBuffer());
-			   	return true;
+					break;
+				case "BATCH_PACKET":
+		        	$packet->encode($this->protocol);
+		        	$this->interface->putReadyPacket($this, $packet->getBuffer());
+			     	return true;
 	    	}
 
 	    	$packet->setDeviceId($this->getDeviceOS());
@@ -2910,6 +2910,9 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 				$pk->z = $pos->z;
 				$this->dataPacket($pk);
 				break;
+			case "SET_LOCAL_PLAYER_AS_INITIALIZED_PACKET":
+			    $this->doFirstSpawn();
+			    break;
 			default:
 				break;
 		}
@@ -3687,10 +3690,6 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 		$this->level->getWeather()->sendWeather($this);
 		$this->updateSpeed($this->movementSpeed);
 		$this->setXpLevel($this->namedtag["XpLevel"]);
-
-	  	$pk = new PlayStatusPacket();
-	   	$pk->status = PlayStatusPacket::PLAYER_SPAWN;
-	   	$this->directDataPacket($pk);
 
 		$this->server->getLogger()->info("Игрок {$this->getName()} вошел с айпи: {$this->getAddress()}, протокол: {$this->getOriginalProtocol()}, версия: {$this->getClientVersion()}");
 		$this->server->addOnlinePlayer($this);
