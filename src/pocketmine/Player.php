@@ -3700,7 +3700,13 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 
 	public function getCreativeItems(){
         $slots = [];
-        foreach(Item::getCreativeItems($this->getProtocol()) as $item){
+        foreach(Item::getCreativeItems() as $item){
+            if($item['item']->getId() == 326){
+                continue;
+            }
+            if($item['item']->getId() == 327){
+                continue;
+            }
             if($item['item']->getId() == 401 && $this->getPlayerProtocol() < ProtocolInfo::PROTOCOL_120){
                 continue;
             }
@@ -3727,7 +3733,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
             $pk = new CreativeContentPacket();
             if(!empty($slots)){
                 $pk->groups = Item::getCreativeGroups();
-                $pk->items = Item::getCreativeItems($this->getProtocol());
+                $pk->items = Item::getCreativeItems();
             } else {
                 $pk->groups = [];
                 $pk->items = [];
