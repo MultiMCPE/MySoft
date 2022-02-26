@@ -931,7 +931,6 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 	    	$this->directDataPacket($pk);
 	    	
 			$this->spawnChunkLoadCount = -1;
-		    $this->doFirstSpawn();
 		}
 	}
 
