@@ -930,6 +930,10 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 	    	$pk->status = PlayStatusPacket::PLAYER_SPAWN;
 	    	$this->directDataPacket($pk);
 	    	
+	    	if ($this->getProtocol() < ProtocolInfo::PROTOCOL_274) {
+	    	    $this->doFirstSpawn();
+	    	}
+	    	
 			$this->spawnChunkLoadCount = -1;
 		}
 	}
