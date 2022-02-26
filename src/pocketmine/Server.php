@@ -1790,14 +1790,6 @@ class Server{
 		$this->start();
 	}
 
-	public function printConsole($string, $isPrint = false){
-		if($isPrint === true){
-			print_r($string);
-		}else{
-			echo $string;
-		}
-	}
-
 	public function getMainInterface() {
 		return $this->mainInterface;
 	}
