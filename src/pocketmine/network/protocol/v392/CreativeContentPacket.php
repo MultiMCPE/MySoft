@@ -33,6 +33,7 @@ class CreativeContentPacket extends PEPacket {
 		$this->putVarInt(count($this->items));
 		$index = 1;
 		foreach ($this->items as $itemData) {
+		    if($playerProtocol >= Info::PROTOCOL_418 && $itemData['item']->getId() == 325 && $itemData['item']->getDamage() !== 0) continue;
 		    if($playerProtocol >= Info::PROTOCOL_418){
 		        $this->putSignedVarInt($index++);
 		    } else {
