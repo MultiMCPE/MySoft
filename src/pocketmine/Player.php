@@ -1885,11 +1885,6 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 			return;
 		}
 
-		/*$alloed = ["INTERACT_PACKET", "MOVE_PLAYER_PACKET", "MOVE_ENTITY_PACKET"];
-		if(!in_array($packet->pname(), $beforeLoginAvailablePackets) and !in_array($packet->pname(), $alloed)){
-			print_r($packet);
-		}*/
-
 		switch($packet->pname()){
             case 'ADVENTURE_SETTINGS_PACKET':
 				if ($this->allowFlight === false && (($packet->flags >> 9) & 0x01 === 1)) { // flying hack
