@@ -36,7 +36,7 @@ abstract class BaseEntity extends Creature{
 
 	protected $speed = 1;
 
-	private static $closeMonsterOnDay = true;
+	private static $closeMonsterOnDay = false;
 
 	public static function setCloseMonsterOnDay($val) {
 		self::$closeMonsterOnDay = $val;
@@ -173,8 +173,6 @@ abstract class BaseEntity extends Creature{
 	}
 
 	public function entityBaseTick($tickDiff = 1){
-		//Timings::$timerEntityBaseTick->startTiming();
-
 		$hasUpdate = Entity::entityBaseTick($tickDiff);
 
 		if($this->isInsideOfSolid()){
@@ -195,15 +193,14 @@ abstract class BaseEntity extends Creature{
 			$this->attackTime -= $tickDiff;
 		}
 
-		/*if (self::$closeMonsterOnDay) {
+		if (self::$closeMonsterOnDay) {
 			$time =  $this->level->getTime() % 30000;
 			$isNight = $time > 16000 && $time < 29000;
 			if($this instanceof Monster && !($this instanceof Wolf) && !$isNight){
 				$this->close();
-				print_r("entityBaseTick BaseEntity \n");
 			}
-		}*/
-		//Timings::$timerEntityBaseTick->startTiming();
+		}
+
 		return $hasUpdate;
 	}
 
