@@ -80,7 +80,7 @@ class Bucket extends Item{
 		//if($targetBlock instanceof Air){
 			if($target instanceof Water){
 				//$result = Item::get(self::$bucketByTarget[$target->getId()], 0, 1);;
-				if($player->getProtocol() >= 120){
+				if($player->getProtocol() >= 415){
 					$result = Item::get(Item::WATER_BUCKET, 0, 1);
 				}else{
 					$result = Item::get(Item::BUCKET, 8, 1);
@@ -105,12 +105,11 @@ class Bucket extends Item{
 				}
 			}elseif($target instanceof Lava){
 				//$result = Item::get(self::$bucketByTarget[$target->getId()], 0, 1);;
-				if($player->getProtocol() >= 120){
+				if($player->getProtocol() >= 415){
 					$result = Item::get(Item::LAVA_BUCKET, 0, 1);
 				}else{
 					$result = Item::get(Item::BUCKET, 10, 1);
 				}
-				//print_r($result);
 				$player->getServer()->getPluginManager()->callEvent($ev = new PlayerBucketFillEvent($player, $block, $face, $this, $result));
 				if(!$ev->isCancelled()){
 					$player->getLevel()->setBlock($target, new Air(), true, true);
