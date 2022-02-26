@@ -2686,11 +2686,9 @@ class Level implements ChunkManager, Metadatable{
 			$pk->bodyYaw = $singleMoveData[4];
 			$this->server->broadcastPacket($viewers, $pk);
 		} else {
-			foreach($viewers as $player){
-				$pk = new MoveEntityPacket();
-				$pk->entities = [$singleMoveData];
-				$player->dataPacket($pk);
-			}
+			$pk = new MoveEntityPacket();
+			$pk->entities = [$singleMoveData];
+			$this->server->broadcastPacket($viewers, $pk);
 		}
 	}
 
