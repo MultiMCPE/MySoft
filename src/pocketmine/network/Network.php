@@ -99,7 +99,7 @@ use pocketmine\network\protocol\v310\NetworkChunkPublisherUpdatePacket;
 use pocketmine\network\protocol\v310\SpawnParticleEffectPacket;
 use pocketmine\network\protocol\ItemFrameDropItemPacket;
 use pocketmine\network\protocol\ItemComponentPacket;
-use pocketmine\network\protocol\{v403\EmotePacket, v392\CreativeContentPacket};
+use pocketmine\network\protocol\{v403\EmotePacket, v392\CreativeContentPacket, v274\SetLocalPlayerAsInitializedPacket};
 
 class Network {
 
@@ -623,6 +623,7 @@ class Network {
 	$this->registerPacket120(ProtocolInfo120::PLAY_SOUND_PACKET, PlaySoundPacket::class);
 	$this->registerPacket120(ProtocolInfo120::ITEM_FRAME_DROP_ITEM_PACKET, ItemFrameDropItemPacket::class);
 	$this->registerPacket120(ProtocolInfo120::BOSS_EVENT_PACKET, BossEventPacket::class);
+	$this->registerPacket120(ProtocolInfo120::SET_LOCAL_PLAYER_AS_INITIALIZED_PACKET, SetLocalPlayerAsInitializedPacket::class);
 	}
 
 	private function registerPackets310() {
@@ -697,6 +698,7 @@ class Network {
 	$this->registerPacket310(ProtocolInfo310::PLAY_SOUND_PACKET, PlaySoundPacket::class);
 	$this->registerPacket310(ProtocolInfo310::ITEM_FRAME_DROP_ITEM_PACKET, ItemFrameDropItemPacket::class);
 	$this->registerPacket310(ProtocolInfo310::BOSS_EVENT_PACKET, BossEventPacket::class);
+	$this->registerPacket310(ProtocolInfo310::SET_LOCAL_PLAYER_AS_INITIALIZED_PACKET, SetLocalPlayerAsInitializedPacket::class);
 	}
 
 	private function registerPackets331() {
@@ -775,5 +777,6 @@ class Network {
 		$this->registerPacket331(ProtocolInfo331::ITEM_STACK_RESPONSE_PACKET, ItemStackResponsePacket::class);
 		$this->registerPacket331(ProtocolInfo331::CREATIVE_CONTENT_PACKET, CreativeContentPacket::class);
 		$this->registerPacket331(ProtocolInfo331::EMOTE_PACKET, EmotePacket::class);
+		$this->registerPacket331(ProtocolInfo331::SET_LOCAL_PLAYER_AS_INITIALIZED_PACKET, SetLocalPlayerAsInitializedPacket::class);
 	}
 }
