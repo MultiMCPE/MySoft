@@ -115,7 +115,6 @@ use pocketmine\utils\UUID;
 use pocketmine\utils\VersionString;
 use pocketmine\network\protocol\Info;
 use pocketmine\level\generator\biome\Biome;
-use raklib\server\Protocol;
 use pocketmine\utils\MetadataConvertor;
 use pocketmine\event\server\SendRecipiesList;
 use pocketmine\network\protocol\PEPacket;
@@ -1651,7 +1650,6 @@ class Server{
 		Block::init();
 		Enchantment::init();
 		Item::init();
-		Protocol::init();
 		Biome::init();
 		Color::init();
 		TextWrapper::init();
