@@ -1075,7 +1075,7 @@ abstract class MultiversionEnums {
 			3 => 'GET_UPDATED_BLOCK',
 			4 => 'DROP_ITEM',
 			5 => 'RELEASE_USE_ITEM',
-			6 => 'STOP_SLEEPENG',
+			6 => 'STOP_SLEEPING',
 			7 => 'RESPAWN',
 			8 => 'START_JUMP',
 			9 => 'START_SPRINTING',
