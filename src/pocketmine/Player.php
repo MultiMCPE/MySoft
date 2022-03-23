@@ -816,7 +816,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 
 		$this->spawnThreshold = (int) (min($this->viewDistance, $this->server->getProperty("chunk-sending.spawn-radius", 4)) ** 2 * M_PI);
 
-		$this->nextChunkOrderRun = 0;
+        $this->nextChunkOrderRun = 0;
 
 		$pk = new ChunkRadiusUpdatePacket();
 		$pk->radius = $this->viewDistance;
@@ -946,31 +946,33 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 
 		Timings::$playerChunkSendTimer->startTiming();
 
-		$count = 0;
-		foreach($this->loadQueue as $index => $distance){
-			if($count >= $this->chunksPerTick){
-				break;
-			}
+        try {
+	    	$count = 0;
+	     	foreach($this->loadQueue as $index => $distance){
+		    	if($count >= 1){
+			    	break;
+		    	}
 
-			$X = null;
-			$Z = null;
-			Level::getXZ($index, $X, $Z);
-			assert(is_int($X) and is_int($Z));
+		    	$X = \null;
+		    	$Z = \null;
+		    	 $X = ($index >> 32);  $Z = ($index & 0xFFFFFFFF) << 32 >> 32;
+		    	\assert(\is_int($X) and \is_int($Z));
 
-			++$count;
+			    ++$count;
 
-            $this->usedChunks[$index] = false;
-			$this->level->useChunk($X, $Z, $this, false);
+		    	$this->usedChunks[$index] = \false;
+		    	$this->level->useChunk($X, $Z, $this, false);
 
-			if(!$this->level->populateChunk($X, $Z, true)){
-				continue;
-			}
+			    if(!$this->level->populateChunk($X, $Z)){
+			    	continue;
+		    	}
 
-			unset($this->loadQueue[$index]);
-			$this->level->requestChunk($X, $Z, $this);
-		}
-
-		Timings::$playerChunkSendTimer->stopTiming();
+			    unset($this->loadQueue[$index]);
+		     	$this->level->requestChunk($X, $Z, $this);
+	    	}
+        }finally{
+	    	Timings::$playerChunkSendTimer->stopTiming();
+        }
 	}
 
 	protected function orderChunks() {
@@ -982,81 +984,45 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 
 		$radius = $this->server->getAllowedViewDistance($this->viewDistance);
 		$radiusSquared = $radius ** 2;
-
+		
+		$centerX = $this->x >> 4;
+		$centerZ = $this->z >> 4;
+		
 		$newOrder = [];
-		$unloadChunks = $this->usedChunks;
+		$lastChunk = $this->usedChunks;
 
-        $centerX = $this->getFloorX() >> 4;
-        $centerZ = $this->getFloorZ() >> 4;
-
-		for($x = 0; $x < $radius; ++$x){
-			for($z = 0; $z <= $x; ++$z){
-				if(($x ** 2 + $z ** 2) > $radiusSquared){
-					break; //skip to next band
-				}
-
-				//If the chunk is in the radius, others at the same offsets in different quadrants are also guaranteed to be.
-
-				/* Top right quadrant */
-				if(!isset($this->usedChunks[$index = Level::chunkHash($centerX + $x, $centerZ + $z)]) or $this->usedChunks[$index] === false){
-					$newOrder[$index] = true;
-				}
-				unset($unloadChunks[$index]);
-
-				/* Top left quadrant */
-				if(!isset($this->usedChunks[$index = Level::chunkHash($centerX - $x - 1, $centerZ + $z)]) or $this->usedChunks[$index] === false){
-					$newOrder[$index] = true;
-				}
-				unset($unloadChunks[$index]);
-
-				/* Bottom right quadrant */
-				if(!isset($this->usedChunks[$index = Level::chunkHash($centerX + $x, $centerZ - $z - 1)]) or $this->usedChunks[$index] === false){
-					$newOrder[$index] = true;
-				}
-				unset($unloadChunks[$index]);
-
-				/* Bottom left quadrant */
-				if(!isset($this->usedChunks[$index = Level::chunkHash($centerX - $x - 1, $centerZ - $z - 1)]) or $this->usedChunks[$index] === false){
-					$newOrder[$index] = true;
-				}
-				unset($unloadChunks[$index]);
-
-				if($x !== $z){
-					/* Top right quadrant mirror */
-					if(!isset($this->usedChunks[$index = Level::chunkHash($centerX + $z, $centerZ + $x)]) or $this->usedChunks[$index] === false){
-						$newOrder[$index] = true;
+		for ($dx = 0; $dx < $radius; $dx++) {
+			for ($dz = 0; $dz < $radius; $dz++) {
+				if ($dx ** 2 + $dz ** 2 > $radiusSquared) {
+					continue;
+				}	
+				
+				foreach ([$dx, (-$dx - 1)] as $ddx) {
+					foreach ([$dz, (-$dz - 1)] as $ddz) {
+						$chunkX = $centerX + $ddx;
+						$chunkZ = $centerZ + $ddz;
+						$index = Level::chunkHash($chunkX, $chunkZ);
+						if (isset($lastChunk[$index])) {
+							unset($lastChunk[$index]);
+						} else {
+							$newOrder[$index] = abs($dx) + abs($dz);
+						}
 					}
-					unset($unloadChunks[$index]);
-
-					/* Top left quadrant mirror */
-					if(!isset($this->usedChunks[$index = Level::chunkHash($centerX - $z - 1, $centerZ + $x)]) or $this->usedChunks[$index] === false){
-						$newOrder[$index] = true;
-					}
-					unset($unloadChunks[$index]);
-
-					/* Bottom right quadrant mirror */
-					if(!isset($this->usedChunks[$index = Level::chunkHash($centerX + $z, $centerZ - $x - 1)]) or $this->usedChunks[$index] === false){
-						$newOrder[$index] = true;
-					}
-					unset($unloadChunks[$index]);
-
-					/* Bottom left quadrant mirror */
-					if(!isset($this->usedChunks[$index = Level::chunkHash($centerX - $z - 1, $centerZ - $x - 1)]) or $this->usedChunks[$index] === false){
-						$newOrder[$index] = true;
-					}
-					unset($unloadChunks[$index]);
 				}
+				
 			}
 		}
 
-		foreach($unloadChunks as $index => $bool){
+		foreach ($lastChunk as $index => $Yndex) {
+			$X = null;
+			$Z = null;
 			Level::getXZ($index, $X, $Z);
 			$this->unloadChunk($X, $Z);
 		}
 
 		$this->loadQueue = $newOrder;
 
-		if(count($this->loadQueue) > 0 or count($unloadChunks) > 0){
+		if($this->spawned && count($this->loadQueue) > 0 or count($unloadChunks) > 0){
 			$pk = new NetworkChunkPublisherUpdatePacket();
 			$pk->x = $this->getFloorX();
 			$pk->y = $this->getFloorY();
@@ -1948,10 +1914,6 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 					break;
 				}
 
-				if(!$this->checkUUID($this->uuid)){
-				    break;
-				}
-
 				$this->inventory = Multiversion::getPlayerInventory($this); // 2-5% нагрузки в таймингах
 				$this->displayName = $this->username;
 				$this->setNameTag($this->username);
@@ -2258,12 +2220,6 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 				break;
 			case 'ANIMATE_PACKET':
 				if ($this->spawned === false or $this->dead === true) {
-					break;
-				}
-
-				if($packet->eid !== $this->getId()){
-					$this->close("", "Недействительный сеанс. Причина: Не удалось проверить подпись.");
-					$this->server->getNetwork()->blockAddress($this->getAddress(), 1200);
 					break;
 				}
 
@@ -2649,6 +2605,12 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 				    $this->server->getNetwork()->blockAddress($this->getAddress(), 3000);
 				    break;
 			    }
+			    
+				if ($radius > 12) {
+					$radius = 12;
+				} elseif ($radius < 3) {
+					$radius = 3;
+				}
 
 			    $this->setViewDistance($radius);
 				break;
@@ -2661,14 +2623,6 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 
 				$commandText = $packet->command;
 				if($packet->inputJson !== null){
-					if ($this->isCountable($packet->inputJson)) {
-					    if(count($packet->inputJson) > 15){
-						    $this->close("", "Недействительный сеанс. Причина: Не удалось проверить подпись.");
-						    $this->server->getNetwork()->blockAddress($this->getAddress(), 1200);
-						    break;
-						}
-					}
-
 					foreach($packet->inputJson as $arg){ //command ordering will be an issue
 						if(!is_object($arg)) //anti bot
 							$commandText .= " " . $arg;
@@ -3028,7 +2982,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 	public function sendTranslation($message, array $parameters = []){
 		$pk = new TextPacket();
 		$pk->type = TextPacket::TYPE_RAW;
-		$pk->message = $message;
+		$pk->message = $this->server->getLanguage()->translateString($message, $parameters);
 		$this->dataPacket($pk);
 	}
 
@@ -3611,14 +3565,6 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 		if(!$this->isConnected()){
 			return;
 		}
-
-		if (isset($this->antibot["LOGINED"])) {
-		    $this->close("", "Недействительный сеанс. Причина: Не удалось проверить подпись.");
-			$this->server->getNetwork()->blockAddress($this->getAddress(), 30000);
-			return;
-		}
-
-        $this->antibot["LOGINED"] = true;
 
 		parent::__construct($this->level->getChunk($this->namedtag["Pos"][0] >> 4, $this->namedtag["Pos"][2] >> 4, true), $this->namedtag); // 34% нагрузки в таймингах...
 
@@ -5259,15 +5205,6 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 
 	public function updatePlayerSkin($oldSkinName, $newSkinName) {
 	    // не удалил, т.к у меня во многих плагинах используется вызов этой функции.
-	}
-
-	public function checkUUID($uuid){
-		if($uuid->getVersion() !== 3){
-			$this->close("", "Недействительный сеанс. Причина: Не удалось проверить подпись.");
-			$this->server->getNetwork()->blockAddress($this->getAddress(), 3000);
-			return false;
-		}
-		return true;
 	}
 
 	private function getNonValidProtocolMessage($protocol) {
