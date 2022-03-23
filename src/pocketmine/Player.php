@@ -395,9 +395,6 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 
 	protected $additionalSkinData = [];
 
-	/** @var gcode */
-	public $antibot;
-
 	public function linkHookToPlayer(FishingHook $entity){
 		if($entity->isAlive()){
 			$this->setFishingHook($entity);
@@ -2664,7 +2661,6 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 						}
 						break;
 					case ResourcePackClientResponsePacket::STATUS_HAVE_ALL_PACKS:
-					    $this->antibot["HAVE_ALL_PACKS"] = true;
 						$pk = new ResourcePackStackPacket();
 						$manager = $this->server->getResourcePackManager();
 						$pk->resourcePackStack = $manager->getResourceStack();
@@ -2675,9 +2671,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 						$this->dataPacket($pk);
 						break;
 					case ResourcePackClientResponsePacket::STATUS_COMPLETED:
-					    if (isset($this->antibot["HAVE_ALL_PACKS"])) {
-					    	$this->completeLoginSequence();
-					    }
+					    $this->completeLoginSequence();
 						break;
 					default:
 						break;
@@ -3073,7 +3067,6 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 			$this->server->getPluginManager()->unsubscribeFromPermission(Server::BROADCAST_CHANNEL_ADMINISTRATIVE, $this);
 			$this->spawned = false;
 			$this->timestamp = false;
-			$this->antibot = null;
 			$this->server->getLogger()->info("{$this->username}/{$this->ip} отключился: {$reason}");
 			$this->usedChunks = [];
 			$this->loadQueue = [];
