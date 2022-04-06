@@ -38,6 +38,8 @@ class RCONInstance extends Thread {
 	private $logger;
 
 	public $serverStatus;
+	
+	public $blockedClients;
 
 	/**
 	 * @return bool
@@ -63,6 +65,7 @@ class RCONInstance extends Thread {
 		$this->socket = $socket;
 		$this->password = $password;
 		$this->maxClients = (int) $maxClients;
+		$this->blockedClients = [];
 		for($n = 0; $n < $this->maxClients; ++$n){
 			$this->{"client" . $n} = null;
 			$this->{"status" . $n} = 0;
@@ -191,17 +194,32 @@ class RCONInstance extends Thread {
 								$this->response = "";
 								break;
 							case 3: //Login
+							    socket_getpeername($client, $addr, $port);
+							    
+							    if($this->blockedClients[$addr] !== NULL){
+							        if($this->blockedClients[$addr] > 5) {
+								    	$this->{"status" . $n} = -1;
+								    	$this->writePacket($client, -1, 2, "");
+							            continue 2;
+							        }
+							    }
+							    
 								if($this->{"status" . $n} !== 0){
 									$this->{"status" . $n} = -1;
 									continue 2;
 								}
+								
 								if($payload === $this->password){
-									socket_getpeername($client, $addr, $port);
 									$this->response = "[INFO] Successful Rcon connection from: /$addr:$port";
 									$this->response = "";
 									$this->writePacket($client, $requestID, 2, "");
 									$this->{"status" . $n} = 1;
 								}else{
+								    $this->blockedClients[$addr] += 1;
+								    if($this->blockedClients[$addr] > 5) {
+								        $this->logger->critical("[INFO] " . $addr . " пытался зайти в RCON несколько раз с неверным паролем. Данный адрес был заблокирован из-за подозрений в использовании брутфорса пароля RCON.");
+								    }
+								    
 									$this->{"status" . $n} = -1;
 									$this->writePacket($client, -1, 2, "");
 									continue 2;
