@@ -484,7 +484,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 			$this->kick("§l§aВы были §cзабанены §aна §bсервере");
 		}else{
 			$this->server->bans->query("DELETE FROM bans WHERE name = '$player'");
-		}
+		} // в будущем эту парашу снести.
 	}
 
 
@@ -5393,7 +5393,7 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 	    else return ZLIB_ENCODING_DEFLATE;
 	}
 
-	public function getOs() {
+	public function getDeviceOs() {
 		return $this->translateVersion($this->deviceType);
 	}
 
@@ -5401,47 +5401,46 @@ class Player extends Human implements CommandSender, InventoryHolder, IPlayer {
 		return $this->deviceModel;
 	}
 
-	public function translateVersion($fdp){
-		switch($fdp){
+	public function translateDeviceType($type){
+		switch($type){
 		case 1:
-			$akha = "Android"; // это обычный Android
+			$deviceos = "Android"; 
 		break;
 		case 2:
-			$akha = "IOS"; // Телефоны Apple
+			$deviceos = "IOS"; 
 		break;
 		case 3:
-			$akha = "MacOS"; // Компьютеры и ноутбуки Apple
+			$deviceos = "MacOS";
 		break;
 		case 4:
-			$akha = "FireOS"; // Операционная система от Amazon, почти не используется, но всё же она есть
+			$deviceos = "FireOS";
 		break;
 		case 5:
-			$akha = "GearVR"; // Тоже мало используемая операционная система VR
+			$deviceos = "GearVR";
 		break;
 		case 6:
-			$akha = "Hololens"; // Чесно хз что это
+			$deviceos = "Hololens";
 		break;
 		case 7:
-			$akha = "Windows 10"; // Windows 10
+			$deviceos = "Windows 10";
 		break;
 		case 8:
-			$akha = "Windows 32/Educal_version"; // Обучающее издание
+			$deviceos = "Windows 32/Educal_version";
 		break;
 		case 9:
-			$akha = "NoName"; #If you have the Name of that send me a mp
+			$deviceos = "NoName";
 		break;
 		case 10:
-			$akha = "Playstation 4"; // Тут понятно
+			$deviceos = "Playstation 4";
 		break;
 		case 11:
-			$akha = "NX"; #NX no name... wollah c vrai
+			$deviceos = "NX";
 		break;
-
 		default:
-			$akha = "Not Registered!"; // если я пропустил
+			$deviceos = "Not Registered";
 		break;
 		}
-		return $akha;
+		return $deviceos;
 	}
 
 	public function getLowerCaseName(){
